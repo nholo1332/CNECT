@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "156402200034",
+    "project_id": "cnect-af250",
+    "storage_bucket": "cnect-af250.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156402200034:android:1a2168be921ff48ed29dbb",
+        "android_client_info": {
+          "package_name": "com.clfbla.cnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156402200034-evhreqlhpedvsdm73v0bq2mt9cfatj52.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkseNFhZlw7wLy1Wf8gN372YYxNviIInU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156402200034-evhreqlhpedvsdm73v0bq2mt9cfatj52.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "156402200034-m4tq2slupu78tfee8hcgvv2ncc6if851.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.clfbla.cnect"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -43,7 +43,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   SizedBox(height: 10,),
                   Text(
-                    'Welcome Back',
+                    'Welcome Back to CNECT',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

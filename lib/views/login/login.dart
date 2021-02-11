@@ -10,6 +10,11 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String email = '';
+  String password = '';
+
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +46,7 @@ class _LoginViewState extends State<LoginView> {
                       fontSize: 40,
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 10),
                   Text(
                     'Welcome Back to CNECT',
                     style: TextStyle(
@@ -52,7 +57,7 @@ class _LoginViewState extends State<LoginView> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 50),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -71,7 +76,7 @@ class _LoginViewState extends State<LoginView> {
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
                                 color: Theme.of(context).accentColor.withOpacity(0.6),
@@ -95,6 +100,9 @@ class _LoginViewState extends State<LoginView> {
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none,
                                   ),
+                                  onChanged: (String value) {
+                                    this.email = value;
+                                  },
                                 ),
                               ),
                               Container(
@@ -105,40 +113,59 @@ class _LoginViewState extends State<LoginView> {
                                     hintStyle: TextStyle(color: Colors.grey),
                                     border: InputBorder.none,
                                   ),
+                                  onChanged: (String value) {
+                                    this.password = value;
+                                  },
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(height: 40),
-                        Text(
-                          'Forgot Password?',
-                          style: TextStyle(color: Colors.grey),
+                        FlatButton(
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          onPressed: () {
+
+                          },
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: 30),
                         Container(
                           height: 50,
                           margin: EdgeInsets.symmetric(horizontal: 50),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            color: Theme.of(context).primaryColor,
+                            color: ( isLoading || email == '' || password == '' )
+                                ? Theme.of(context).primaryColor.withOpacity(0.8)
+                                : Theme.of(context).primaryColor,
                           ),
-                          child: Center(
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Center(
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
+                              onTap: ( isLoading || email == '' || password == '' ) ? null : () {
+                                print('tapped');
+                              },
                             ),
                           ),
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 60),
                         Text(
                           'Don\'t have an account?',
                           style: TextStyle(color: Colors.grey),
                         ),
-                        SizedBox(height: 30),
+                        SizedBox(height: 20),
                         Container(
                           height: 50,
                           margin: EdgeInsets.symmetric(horizontal: 80),
@@ -146,13 +173,22 @@ class _LoginViewState extends State<LoginView> {
                             borderRadius: BorderRadius.circular(50),
                             color: Theme.of(context).accentColor,
                           ),
-                          child: Center(
-                            child: Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Center(
+                                child: Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
+                              onTap: () {
+                                print('tapped');
+                              },
                             ),
                           ),
                         ),

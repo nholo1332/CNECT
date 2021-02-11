@@ -1,18 +1,19 @@
 import 'package:cnect/main.dart';
-import 'package:cnect/views/signUp/signUp.dart';
+import 'package:cnect/views/login/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginView extends StatefulWidget {
-  LoginView();
+class SignUpView extends StatefulWidget {
+  SignUpView();
 
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _SignUpViewState createState() => _SignUpViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignUpViewState extends State<SignUpView> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String name = '';
   String email = '';
   String password = '';
 
@@ -41,12 +42,17 @@ class _LoginViewState extends State<LoginView> {
           children: <Widget>[
             SizedBox(height: 80),
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.only(
+                top: 20,
+                right: 20,
+                left: 20,
+                bottom: 10,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Login',
+                    'Sign Up',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 40,
@@ -54,16 +60,40 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Welcome Back to CNECT',
+                    'Create your CNECT account',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                     ),
                   ),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    width: 170,
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginView()));
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: Theme.of(context).primaryIconTheme.color,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Back to Login',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-            SizedBox(height: 50),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -104,6 +134,26 @@ class _LoginViewState extends State<LoginView> {
                                   ),
                                   child: TextField(
                                     decoration: InputDecoration(
+                                      hintText: 'Name',
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none,
+                                    ),
+                                    onChanged: (String value) {
+                                      setState(() {
+                                        this.name = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(color: Colors.grey[200]),
+                                    ),
+                                  ),
+                                  child: TextField(
+                                    decoration: InputDecoration(
                                       hintText: 'Email',
                                       hintStyle: TextStyle(color: Colors.grey),
                                       border: InputBorder.none,
@@ -133,23 +183,13 @@ class _LoginViewState extends State<LoginView> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 40),
-                          FlatButton(
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            onPressed: () {
-
-                            },
-                          ),
-                          SizedBox(height: 30),
+                          SizedBox(height: 70),
                           Container(
                             height: 50,
                             margin: EdgeInsets.symmetric(horizontal: 50),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
-                              color: ( isLoading || email == '' || password == '' )
+                              color: ( isLoading || email == '' || password == '' || name == '' )
                                   ? Theme.of(context).primaryColor.withOpacity(0.8)
                                   : Theme.of(context).primaryColor,
                             ),
@@ -161,36 +201,6 @@ class _LoginViewState extends State<LoginView> {
                                   child: isLoading ? CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ) : Text(
-                                    'Login',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: ( isLoading || email == '' || password == '' ) ? null : () => login(context),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 60),
-                          Text(
-                            'Don\'t have an account?',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          SizedBox(height: 20),
-                          Container(
-                            height: 50,
-                            margin: EdgeInsets.symmetric(horizontal: 80),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Theme.of(context).accentColor,
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Center(
-                                  child: Text(
                                     'Sign Up',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -198,9 +208,7 @@ class _LoginViewState extends State<LoginView> {
                                     ),
                                   ),
                                 ),
-                                onTap: () {
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SignUpView()));
-                                },
+                                onTap: ( isLoading || email == '' || password == '' || name == '' ) ? null : () => login(context),
                               ),
                             ),
                           ),
@@ -222,15 +230,15 @@ class _LoginViewState extends State<LoginView> {
     setState(() {
       isLoading = true;
     });
-    auth.signInWithEmailAndPassword(email: email, password: password).then((value) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));
+    auth.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+
     }).catchError((error) {
       setState(() {
         isLoading = false;
       });
       scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text('Incorrect email or password'),
+          content: Text('Failed to create user'),
         ),
       );
     });

@@ -8,7 +8,7 @@ final lightTheme = ThemeData(
   primaryIconTheme: IconThemeData(color: Colors.white),
   accentIconTheme: IconThemeData(color: Colors.white60),
   brightness: Brightness.light,
-  backgroundColor: Color.fromRGBO(148, 199, 189, 1),
+  backgroundColor: Colors.white,
   fontFamily: GoogleFonts.montserrat().fontFamily,
   dividerColor: Colors.white54,
   cardTheme: CardTheme(

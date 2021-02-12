@@ -1,3 +1,4 @@
+import 'package:cnect/views/home/home.dart';
 import 'package:flutter/material.dart';
 
 class Manager extends StatefulWidget {
@@ -14,7 +15,7 @@ class _ManagerState extends State<Manager> {
 
   int _currentIndex = 0;
   final List<Widget> _children = [
-
+    HomeView()
   ];
 
   @override
@@ -44,22 +45,10 @@ class _ManagerState extends State<Manager> {
         ),
         unselectedItemColor: Theme.of(context).accentIconTheme.color,
         items: [
-          new BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.video_library),
-            label: 'Tutorials',
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.today),
-            label: 'Weekly Plan',
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.local_mall),
-            label: 'Store',
-          )
         ],
       ),
     );

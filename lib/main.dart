@@ -1,3 +1,6 @@
+import 'package:cnect/models/user.dart';
+import 'package:cnect/providers/backend.dart';
+import 'package:cnect/providers/globals.dart';
 import 'package:cnect/views/login/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +43,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void fetchData() async {
     if ( auth.currentUser != null ) {
-      auth.signOut();
+      Backend.getUser().then((value) {
+        Globals.currentUser = value;
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Manager()));
+      }).catchError((error) {
+        if ( error == 404 ) {
+          // TODO: Move to the on boarding view and add user name input page
+        }
+      });
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginView()));
     }

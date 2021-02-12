@@ -13,9 +13,9 @@ class UserClass {
 
   UserClass.fromJson(Map<String, dynamic> data) {
     name = data['name'];
-    communities = data['communities'];
-    events = data['events'];
-    businesses = data['businesses'];
+    communities = new List<String>.from(data['communities']);
+    events = new List<String>.from(data['events']);
+    businesses = new List<String>.from(data['businesses']);
   }
 
   Map<String, dynamic> toJson() => {

@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 
 class Backend {
 
-  static final String baseURL = 'http://192.168.0.11:3000';
+  static final String baseURL = 'http://127.0.0.1:3000';
+  //static final String baseURL = 'http://192.168.0.11:3000';
 
   static FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -18,7 +19,7 @@ class Backend {
   static Future signUp(UserClass user) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     };
 
     var client = new RetryClient(new http.Client(), retries: 3);
@@ -28,6 +29,29 @@ class Backend {
         body: jsonEncode(user.toJson()),
     ).then((res) {
       return res;
+    }).catchError((error) {
+      throw error;
+    });
+  }
+
+  static Future getUser() async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + await generateToken(),
+      'Content-Type': 'application/json',
+    };
+
+    var client = new RetryClient(new http.Client(), retries: 3);
+    return await client.get(
+      baseURL + '/user/get',
+      headers: headers,
+    ).then((res) {
+      print(res.body);
+      if ( res.statusCode == 200 ) {
+        UserClass user = new UserClass.fromJson(json.decode(res.body));
+        return user;
+      } else {
+        throw res.statusCode;
+      }
     }).catchError((error) {
       throw error;
     });

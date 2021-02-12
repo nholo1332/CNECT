@@ -123,6 +123,7 @@ class _LoginViewState extends State<LoginView> {
                                       hintStyle: TextStyle(color: Colors.grey),
                                       border: InputBorder.none,
                                     ),
+                                    obscureText: true,
                                     onChanged: (String value) {
                                       setState(() {
                                         this.password = value;
@@ -139,9 +140,7 @@ class _LoginViewState extends State<LoginView> {
                               'Forgot Password?',
                               style: TextStyle(color: Colors.grey),
                             ),
-                            onPressed: () {
-
-                            },
+                            onPressed: () => resetPassword(),
                           ),
                           SizedBox(height: 30),
                           Container(
@@ -215,6 +214,30 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
     );
+  }
+
+  void resetPassword() {
+    if ( email != '' ) {
+      auth.sendPasswordResetEmail(email: email).then((value) {
+        scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text('Check your inbox for a password reset link'),
+          ),
+        );
+      }).catchError((error) {
+        scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text('Failed to send password reset'),
+          ),
+        );
+      });
+    } else {
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Please enter a valid email'),
+        ),
+      );
+    }
   }
 
   void login(BuildContext context) {

@@ -1,4 +1,6 @@
 import 'package:cnect/main.dart';
+import 'package:cnect/models/user.dart';
+import 'package:cnect/providers/backend.dart';
 import 'package:cnect/views/login/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -190,8 +192,8 @@ class _SignUpViewState extends State<SignUpView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
                               color: ( isLoading || email == '' || password == '' || name == '' )
-                                  ? Theme.of(context).primaryColor.withOpacity(0.8)
-                                  : Theme.of(context).primaryColor,
+                                  ? Theme.of(context).accentColor.withOpacity(0.8)
+                                  : Theme.of(context).accentColor,
                             ),
                             child: Material(
                               color: Colors.transparent,
@@ -231,7 +233,11 @@ class _SignUpViewState extends State<SignUpView> {
       isLoading = true;
     });
     auth.createUserWithEmailAndPassword(email: email, password: password).then((value) {
-
+      var user = new UserClass();
+      user.name = name;
+      return Backend.signUp(user);
+    }).then((value) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));
     }).catchError((error) {
       setState(() {
         isLoading = false;

@@ -18,14 +18,14 @@ void main() async {
 class CNECT extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'CNECT',
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme,
-      home: new SplashScreen(),
+      home: SplashScreen(),
       routes: <String, WidgetBuilder>{
-        '/manager': (BuildContext context) => new Manager()
+        '/manager': (BuildContext context) => Manager()
       },
     );
   }
@@ -33,7 +33,7 @@ class CNECT extends StatelessWidget {
 
 class SplashScreen extends StatefulWidget {
   @override
-  _SplashScreenState createState() => new _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -67,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
         width: double.infinity,
@@ -136,8 +136,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                   right: 10,
                                 ),
                                 height: 175,
-                                decoration: new BoxDecoration(
-                                  image: new DecorationImage(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
                                     image: AssetImage('assets/images/logos/logo.png'),
                                     fit: BoxFit.fitHeight,
                                   ),

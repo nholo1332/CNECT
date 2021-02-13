@@ -1,4 +1,6 @@
+import 'package:cnect/views/announcements/announcements.dart';
 import 'package:cnect/views/home/home.dart';
+import 'package:cnect/views/map/map.dart';
 import 'package:flutter/material.dart';
 
 class Manager extends StatefulWidget {
@@ -15,7 +17,9 @@ class _ManagerState extends State<Manager> {
 
   int _currentIndex = 0;
   final List<Widget> _children = [
-    HomeView()
+    HomeView(),
+    MapView(),
+    AnnouncementsView()
   ];
 
   @override
@@ -29,10 +33,10 @@ class _ManagerState extends State<Manager> {
     return Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).bottomAppBarColor,
+        //backgroundColor: Theme.of(context).bottomAppBarColor,
         onTap: onTabTapped,
         currentIndex: _currentIndex,
-        selectedIconTheme: IconThemeData(
+        /*selectedIconTheme: IconThemeData(
             color: Theme.of(context).accentColor
         ),
         selectedLabelStyle: TextStyle(
@@ -43,11 +47,19 @@ class _ManagerState extends State<Manager> {
         unselectedLabelStyle: TextStyle(
             color: Theme.of(context).accentIconTheme.color
         ),
-        unselectedItemColor: Theme.of(context).accentIconTheme.color,
+        unselectedItemColor: Theme.of(context).accentIconTheme.color,*/
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.campaign),
+            label: 'Announcements',
           ),
         ],
       ),

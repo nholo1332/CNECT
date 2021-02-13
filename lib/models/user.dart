@@ -1,7 +1,9 @@
+import 'package:cnect/models/event.dart';
+
 class UserClass {
   String name;
   List<String> communities;
-  List<String> events;
+  List<Event> events;
   List<String> businesses;
 
   UserClass({
@@ -14,14 +16,15 @@ class UserClass {
   UserClass.fromJson(Map<String, dynamic> data) {
     name = data['name'];
     communities = new List<String>.from(data['communities']);
-    events = new List<String>.from(data['events']);
+    events = data['events'] != []
+        ? data['events'].map((item) => Event.fromJson(item))
+          .toList()
+          .cast<Event>()
+        : new List<Event>();
     businesses = new List<String>.from(data['businesses']);
   }
 
   Map<String, dynamic> toJson() => {
     'name': name,
-    'communities': communities,
-    'events': events,
-    'businesses': businesses
   };
 }

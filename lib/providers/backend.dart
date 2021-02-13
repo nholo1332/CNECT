@@ -45,10 +45,8 @@ class Backend {
       baseURL + '/user/get',
       headers: headers,
     ).then((res) {
-      print(res.body);
       if ( res.statusCode == 200 ) {
-        UserClass user = new UserClass.fromJson(json.decode(res.body));
-        return user;
+        return new UserClass.fromJson(json.decode(res.body));
       } else {
         throw res.statusCode;
       }

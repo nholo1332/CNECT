@@ -1,4 +1,3 @@
-import 'package:cnect/models/user.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/views/login/login.dart';
@@ -25,7 +24,7 @@ class CNECT extends StatelessWidget {
       darkTheme: darkTheme,
       home: SplashScreen(),
       routes: <String, WidgetBuilder>{
-        '/manager': (BuildContext context) => Manager()
+        '/manager': (BuildContext context) => Manager(),
       },
     );
   }
@@ -47,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Globals.currentUser = value;
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Manager()));
       }).catchError((error) {
+        print(error);
         if ( error == 404 ) {
           // TODO: Move to the on boarding view and add user name input page
         }
@@ -99,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Uniting local professionals with the community',
+                    'Connecting local professionals with the community',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

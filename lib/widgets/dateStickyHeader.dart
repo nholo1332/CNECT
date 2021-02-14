@@ -1,4 +1,5 @@
 import 'package:cnect/models/event.dart';
+import 'package:cnect/utils.dart';
 import 'package:cnect/widgets/eventListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
@@ -54,21 +55,45 @@ class DateStickyHeader {
                   DateFormat('EEE').format(date).toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey,
+                    color: Utils.isSameDate(new DateTime.now(), date)
+                        ? Theme.of(context).accentColor
+                        : Colors.grey,
                     fontSize: 12,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              Text(
-                date.day.toString(),
-                style: TextStyle(fontSize: 22),
-                textAlign: TextAlign.center,
-              ),
+              buildDateText(context, date),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget buildDateText(BuildContext context, DateTime date) {
+    if ( Utils.isSameDate(new DateTime.now(), date) ) {
+      return Container(
+        width: 75,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Theme.of(context).accentColor,
+        ),
+        child: Text(
+          date.day.toString(),
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      return Text(
+        date.day.toString(),
+        style: TextStyle(fontSize: 22),
+        textAlign: TextAlign.center,
+      );
+    }
   }
 }

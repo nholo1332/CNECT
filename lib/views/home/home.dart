@@ -1,4 +1,7 @@
+import 'package:cnect/models/event.dart';
 import 'package:cnect/providers/globals.dart';
+import 'package:cnect/utils.dart';
+import 'package:cnect/widgets/dateStickyHeader.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
@@ -69,7 +72,7 @@ class _HomeViewState extends State<HomeView> {
                   padding: EdgeInsets.only(top: 12),
                   child: Padding(
                     padding: EdgeInsets.all(30),
-                    child: buildContent(),
+                    child: buildContent(context),
                   ),
                 ),
               ),
@@ -80,9 +83,9 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  buildContent() {
+  buildContent(BuildContext context) {
     if ( Globals.currentUser.events.length > 0 ) {
-      // TODO: Build list of upcoming events
+      return buildEventList(context);
     } else {
       return Column(
         children: <Widget>[
@@ -102,5 +105,47 @@ class _HomeViewState extends State<HomeView> {
         ],
       );
     }
+  }
+
+  buildEventList(BuildContext context) {
+    List<Event> events = Globals.currentUser.events;
+    List<Widget> slivers = List<Widget>();
+    int firstIndex = 0;
+
+    for ( int i = 0; i < events.length; i++ ) {
+      if ( i > 0 && ( !Utils.isSameDate(events[i - 1].startTime, events[i].startTime) || i + 1 == events.length ) ) {
+        int count = events.getRange(firstIndex, i).length;
+        slivers.addAll(DateStickyHeader().buildSideHeaderGrids(context, firstIndex, count, events));
+        firstIndex = i;
+      }
+    }
+
+    ScrollController scrollController = ScrollController(
+        initialScrollOffset: findScrollOffset(events.length),
+    );
+    CustomScrollView scrollView = CustomScrollView(
+      slivers: slivers,
+      controller: scrollController,
+    );
+
+    return scrollView;
+  }
+
+  double findScrollOffset(int count) {
+    double itemHeight = 72;
+    for (int j = 0; j < count; j++) {
+      DateTime eventDate = Globals.currentUser.events[j].startTime;
+      DateTime now = DateTime.now();
+      if (eventDate.year == now.year && eventDate.month == now.month) {
+        if (Utils.isSameDate(eventDate, now)) {
+          return j * itemHeight;
+        } else if (eventDate.isAfter(now)) {
+          return j * itemHeight;
+        }
+      } else {
+        return 0;
+      }
+    }
+    return 0;
   }
 }

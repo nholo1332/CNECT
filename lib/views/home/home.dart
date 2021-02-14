@@ -48,7 +48,11 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    Globals.currentUser.name,
+                    Globals.currentUser.name + (
+                      Globals.currentUser.events.length > 0
+                          ? '. Here are some of your upcoming events'
+                          : ''
+                    ),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

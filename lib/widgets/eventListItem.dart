@@ -1,7 +1,7 @@
 import 'package:cnect/models/event.dart';
+import 'package:cnect/utils.dart';
 import 'package:cnect/views/event/event.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class EventListItem extends StatelessWidget {
 
@@ -33,7 +33,7 @@ class EventListItem extends StatelessWidget {
           ),
           subtitle: Text(
             showDate
-                ? getDateText(event.startTime, event.endTime)
+                ? Utils.getEventDateText(event.startTime, event.endTime)
                 : event.location,
             overflow: TextOverflow.fade,
             softWrap: false,
@@ -45,13 +45,4 @@ class EventListItem extends StatelessWidget {
     );
   }
 
-  String getDateText(DateTime d1, DateTime d2) {
-    if ( d1.hour > 12 && d2.hour > 12 ) {
-      return DateFormat('h:mm').format(event.startTime) + ' - ' + DateFormat('h:mm').format(event.endTime) + ' PM';
-    } else if ( d1.hour < 12 && d2.hour < 12 ) {
-      return DateFormat('h:mm').format(event.startTime) + ' - ' + DateFormat('h:mm').format(event.endTime) + ' AM';
-    } else {
-      return DateFormat('h:mm a').format(event.startTime) + ' - ' + DateFormat('h:mm a').format(event.endTime);
-    }
-  }
 }

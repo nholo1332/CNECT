@@ -1,10 +1,12 @@
+import 'package:cnect/models/location.dart';
+
 class Event {
   String id;
   String name;
   String description;
   DateTime startTime;
   DateTime endTime;
-  String location;
+  LocationData location;
   String community;
 
   Event({
@@ -23,7 +25,7 @@ class Event {
     description = data['description'];
     startTime = DateTime.parse(data['start_time']);
     endTime = DateTime.parse(data['end_time']);
-    location = data['location'];
+    location = new LocationData.fromJson(data['location']);
     community = data['community'];
   }
 
@@ -33,7 +35,7 @@ class Event {
     'description': description,
     'start_time': startTime.toIso8601String(),
     'end_time': endTime.toIso8601String(),
-    'location': location,
+    'location': location.toJson(),
     'community': community
   };
 }

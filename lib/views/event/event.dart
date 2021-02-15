@@ -31,11 +31,16 @@ class _EventViewState extends State<EventView> {
 
   int communityIndex;
 
+  bool isLoadingRSVP = false;
+
+  bool hasRSVP = false;
+
   void initState() {
     super.initState();
     event = widget.event;
     eventCenter = LatLng(event.location.lat, event.location.long);
     communityIndex = Globals.currentUser.communities.indexWhere((c) => c.id == event.community);
+    hasRSVP = Globals.currentUser.events.indexWhere((e) => e.id == event.id) != -1;
   }
 
   @override
@@ -44,6 +49,7 @@ class _EventViewState extends State<EventView> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      key: scaffoldKey,
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -228,10 +234,7 @@ class _EventViewState extends State<EventView> {
                         ],
                       ),
                       SizedBox(height: 20),
-                      MaterialButton(
-                        child: Text('Can\'t attend? Redact RSVP'),
-                        onPressed: () {},
-                      ),
+                      buildRSVP(),
                       SizedBox(height: 20),
                       buildCommunityText(),
                       buildCommunity(),
@@ -244,6 +247,60 @@ class _EventViewState extends State<EventView> {
         ),
       ),
     );
+  }
+
+  void redactRsvp() {
+    setState(() {
+      isLoadingRSVP = true;
+    });
+    Backend.redactRSVP(event.id).then((value) {
+      Globals.currentUser.events.remove(event);
+      setState(() {
+        hasRSVP = false;
+        isLoadingRSVP = false;
+      });
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Redacted RSVP'),
+        ),
+      );
+    }).catchError((error) {
+      setState(() {
+        isLoadingRSVP = false;
+      });
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Failed to redact RSVP'),
+        ),
+      );
+    });
+  }
+
+  void rsvp() {
+    setState(() {
+      isLoadingRSVP = true;
+    });
+    Backend.addRSVP(event.id).then((value) {
+      Globals.currentUser.events.add(event);
+      setState(() {
+        hasRSVP = true;
+        isLoadingRSVP = false;
+      });
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Added RSVP'),
+        ),
+      );
+    }).catchError((error) {
+      setState(() {
+        isLoadingRSVP = false;
+      });
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Failed to add RSVP'),
+        ),
+      );
+    });
   }
 
   void _onMapCreated(GoogleMapController controller)async  {
@@ -265,6 +322,40 @@ class _EventViewState extends State<EventView> {
         ),
       );
     });
+  }
+
+  Widget buildRSVP() {
+    if ( hasRSVP ) {
+      return MaterialButton(
+        child: isLoadingRSVP
+            ? CircularProgressIndicator()
+            : Text('Can\'t attend? Redact RSVP'),
+        onPressed: isLoadingRSVP
+            ? null
+            : redactRsvp,
+      );
+    } else {
+      return Container(
+        child: Column(
+          children: [
+            Text('Want to attend?'),
+            LargeRoundedButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              childWidget: isLoadingRSVP
+                  ? CircularProgressIndicator()
+                  : Text(
+                'RSVP Now',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTapAction: rsvp,
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Widget buildCommunityText() {

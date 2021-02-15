@@ -122,6 +122,10 @@ class _HomeViewState extends State<HomeView> {
         slivers.addAll(DateStickyHeader().buildSideHeaderGrids(context, firstIndex, count, events));
         firstIndex = i;
       }
+
+      if ( ( i + 1) == events.length && slivers.length == 0 ) {
+        slivers.addAll(DateStickyHeader().buildSideHeaderGrids(context, firstIndex, events.length, events));
+      }
     }
 
     ScrollController scrollController = ScrollController(

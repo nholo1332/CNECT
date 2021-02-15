@@ -2,6 +2,7 @@ import 'package:cnect/main.dart';
 import 'package:cnect/models/user.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/views/login/login.dart';
+import 'package:cnect/widgets/largeRoundedButton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -186,33 +187,22 @@ class _SignUpViewState extends State<SignUpView> {
                             ),
                           ),
                           SizedBox(height: 70),
-                          Container(
-                            height: 50,
-                            margin: EdgeInsets.symmetric(horizontal: 50),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: ( isLoading || email == '' || password == '' || name == '' )
-                                  ? Theme.of(context).accentColor.withOpacity(0.8)
-                                  : Theme.of(context).accentColor,
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Center(
-                                  child: isLoading ? CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                  ) : Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: ( isLoading || email == '' || password == '' || name == '' ) ? null : () => login(context),
+                          LargeRoundedButton(
+                            backgroundColor: ( isLoading || email == '' || password == '' || name == '' )
+                                ? Theme.of(context).accentColor.withOpacity(0.8)
+                                : Theme.of(context).accentColor,
+                            childWidget: isLoading ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ): Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
+                            onTapAction: ( isLoading || email == '' || password == '' || name == '' )
+                                ? null
+                                : () => login(context),
                           ),
                         ],
                       ),

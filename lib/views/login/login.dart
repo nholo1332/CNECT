@@ -222,11 +222,14 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void login(BuildContext context) {
+    // Ensure no snack bars are open (to prevent a stack of snack bars repeatedly appearing)
     scaffoldKey.currentState.removeCurrentSnackBar();
     setState(() {
       isLoading = true;
     });
+    // Sign user in using Firebase
     auth.signInWithEmailAndPassword(email: email, password: password).then((value) {
+      // Move to splash screen to load data
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));
     }).catchError((error) {
       setState(() {

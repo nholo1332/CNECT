@@ -1,5 +1,6 @@
 import 'package:cnect/main.dart';
 import 'package:cnect/views/signUp/signUp.dart';
+import 'package:cnect/widgets/largeRoundedButton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -143,33 +144,22 @@ class _LoginViewState extends State<LoginView> {
                             onPressed: () => resetPassword(),
                           ),
                           SizedBox(height: 30),
-                          Container(
-                            height: 50,
-                            margin: EdgeInsets.symmetric(horizontal: 50),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: ( isLoading || email == '' || password == '' )
-                                  ? Theme.of(context).primaryColor.withOpacity(0.8)
-                                  : Theme.of(context).primaryColor,
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Center(
-                                  child: isLoading ? CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                  ) : Text(
-                                    'Login',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: ( isLoading || email == '' || password == '' ) ? null : () => login(context),
+                          LargeRoundedButton(
+                            backgroundColor: ( isLoading || email == '' || password == '' )
+                                ? Theme.of(context).primaryColor.withOpacity(0.8)
+                                : Theme.of(context).primaryColor,
+                            childWidget: isLoading ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ) : Text(
+                              'Login',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
+                            onTapAction: ( isLoading || email == '' || password == '' )
+                                ? null
+                                : () => login(context),
                           ),
                           SizedBox(height: 60),
                           Text(
@@ -177,31 +167,22 @@ class _LoginViewState extends State<LoginView> {
                             style: TextStyle(color: Colors.grey),
                           ),
                           SizedBox(height: 20),
-                          Container(
-                            height: 50,
-                            margin: EdgeInsets.symmetric(horizontal: 80),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Theme.of(context).accentColor,
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Center(
-                                  child: Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => SignUpView()));
-                                },
+                          LargeRoundedButton(
+                            backgroundColor: Theme.of(context).accentColor,
+                            childWidget: Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
+                            onTapAction: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) => SignUpView(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),

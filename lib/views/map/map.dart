@@ -35,7 +35,12 @@ class _MapViewState extends State<MapView> {
         child: Icon(Icons.my_location),
         onPressed: () {
           mapController.animateCamera(
-            CameraUpdate.zoomTo(15),
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: communityCenter,
+                zoom: 15,
+              ),
+            ),
           );
         },
       ),

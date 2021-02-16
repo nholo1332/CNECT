@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:cnect/models/business.dart';
 import 'package:cnect/models/user.dart';
+import 'package:cnect/providers/globals.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http_retry/http_retry.dart';
 import 'package:http/http.dart' as http;
@@ -87,5 +89,40 @@ class Backend {
     }).catchError((error) {
       throw error;
     });
+  }
+
+  static Future<List<Business>> getBusinesses(String communityId) async {
+    if ( ( Globals.businesses ?? {} ).containsKey(communityId) ) {
+      return Globals.businesses[communityId];
+    } else {
+      Map<String, String> headers = {
+        'Authorization': 'Bearer ' + await generateToken(),
+        'Content-Type': 'application/json',
+      };
+
+      var client = new RetryClient(new http.Client(), retries: 3);
+      return await client.get(
+        baseURL + '/businesses/getAll/community/' + communityId,
+        headers: headers,
+      ).then((res) {
+        print(res.body);
+        Map<String, dynamic> data = json.decode(res.body);
+        List<Business> business = data['businesses'] != []
+            ? data['businesses'].map((item) => Business.fromJson(item)).toList().cast<Business>()
+            : new List<Business>();
+        if ( Globals.businesses == null ) {
+          Map<String, List<Business>> newBusinesses = {
+            communityId: business,
+          };
+          Globals.businesses = newBusinesses;
+        } else {
+          Globals.businesses[communityId] = business;
+        }
+        return business;
+      }).catchError((error) {
+        print(error);
+        throw error;
+      });
+    }
   }
 }

@@ -3,27 +3,41 @@ import 'package:flutter/material.dart';
 class BottomSheetPopOver extends StatelessWidget {
   const BottomSheetPopOver({
     Key key,
-    this.child,
+    @required this.child,
+    @required this.title,
   }) : super(key: key);
 
   final Widget child;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16.0),
+      margin: EdgeInsets.all(16),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           buildHandle(context),
-          child != null
-              ? child
-              : Container(),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 5,
+              bottom: 5,
+            ),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          child,
+          SizedBox(height: 25),
         ],
       ),
     );
@@ -33,12 +47,12 @@ class BottomSheetPopOver extends StatelessWidget {
     return FractionallySizedBox(
       widthFactor: 0.25,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 12.0),
+        margin: EdgeInsets.symmetric(vertical: 12),
         child: Container(
-          height: 5.0,
+          height: 5,
           decoration: BoxDecoration(
-            color: Theme.of(context).dividerColor,
-            borderRadius: BorderRadius.all(Radius.circular(2.5)),
+            color: Colors.grey,
+            borderRadius: BorderRadius.all(Radius.circular(15)),
           ),
         ),
       ),

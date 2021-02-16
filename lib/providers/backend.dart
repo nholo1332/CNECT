@@ -105,7 +105,6 @@ class Backend {
         baseURL + '/businesses/getAll/community/' + communityId,
         headers: headers,
       ).then((res) {
-        print(res.body);
         Map<String, dynamic> data = json.decode(res.body);
         List<Business> business = data['businesses'] != []
             ? data['businesses'].map((item) => Business.fromJson(item)).toList().cast<Business>()
@@ -120,7 +119,6 @@ class Backend {
         }
         return business;
       }).catchError((error) {
-        print(error);
         throw error;
       });
     }

@@ -1,4 +1,6 @@
+import 'package:cnect/models/business.dart';
 import 'package:cnect/models/community.dart';
+import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -48,15 +50,41 @@ class _MapViewState extends State<MapView> {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              myLocationButtonEnabled: false,
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: true,
-              initialCameraPosition: CameraPosition(
-                target: communityCenter,
-                zoom: 15,
-              ),
+            FutureBuilder<List<Business>>(
+              future: Backend.getBusinesses(selectedCommunity.id),
+              builder: (BuildContext context, AsyncSnapshot<List<Business>> snapshot) {
+                if ( snapshot.hasData ) {
+                  
+                  return GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    myLocationButtonEnabled: false,
+                    zoomGesturesEnabled: true,
+                    zoomControlsEnabled: true,
+                    initialCameraPosition: CameraPosition(
+                      target: communityCenter,
+                      zoom: 15,
+                    ),
+                  );
+                } else if ( snapshot.hasError ) {
+                  scaffoldKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to load map data'),
+                    ),
+                  );
+                  return Container();
+                } else {
+                  return Container(
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                      ],
+                    ),
+                  );
+                }
+              },
             ),
             Padding(
               padding: EdgeInsets.only(top: 45),

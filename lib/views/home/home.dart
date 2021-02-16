@@ -50,7 +50,7 @@ class _HomeViewState extends State<HomeView> {
                   Text(
                     Globals.currentUser.name + (
                       Globals.currentUser.events.length > 0
-                          ? '. Here are some of your upcoming events'
+                          ? ' - Here are some of your upcoming events'
                           : ''
                     ),
                     style: TextStyle(

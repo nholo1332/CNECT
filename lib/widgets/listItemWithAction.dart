@@ -17,8 +17,8 @@ class ListItemWithAction extends StatelessWidget {
     // Build button and return Widget
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 24.0,
-        vertical: 16.0,
+        horizontal: 24,
+        vertical: 5,
       ),
       decoration: BoxDecoration(
         border: Border(
@@ -28,24 +28,31 @@ class ListItemWithAction extends StatelessWidget {
           ),
         ),
       ),
-      child:  Material(
+      child: Material(
         color: Colors.transparent,
         child: InkWell(
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              leading,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: DefaultTextStyle(
-                  child: title,
-                  style: Theme.of(context).textTheme.headline6,
+          onTap: onTapAction,
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: 12,
+              bottom: 12,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                leading,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: DefaultTextStyle(
+                    child: title,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          )
         ),
-      )
+      ),
     );
   }
 

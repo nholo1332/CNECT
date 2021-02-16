@@ -66,6 +66,8 @@ PODS:
   - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (1.2.12)
+  - social_share (0.0.1):
+    - Flutter
   - url_launcher (0.0.1):
     - Flutter
 
@@ -78,6 +80,7 @@ DEPENDENCIES:
   - maps_launcher (from `.symlinks/plugins/maps_launcher/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - social_share (from `.symlinks/plugins/social_share/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
@@ -110,6 +113,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
+  social_share:
+    :path: ".symlinks/plugins/social_share/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
 
@@ -132,6 +137,7 @@ SPEC CHECKSUMS:
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  social_share: 702a5e3842addd22db515aa9e1e00a4b80a0296d
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
 
 PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d

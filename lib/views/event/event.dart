@@ -3,6 +3,7 @@ import 'package:cnect/models/event.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/utils.dart';
+import 'package:cnect/views/event/socialSheet.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -199,7 +200,7 @@ class _EventViewState extends State<EventView> {
                                 ],
                               ),
                               onTapAction: () {
-                                MapsLauncher.launchQuery(event.location.address);
+                                SocialSheet().showSocialBottomSheet(context, event);
                               },
                             ),
                           ),

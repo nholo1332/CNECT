@@ -258,6 +258,8 @@ class _EventViewState extends State<EventView> {
     });
     Backend.redactRSVP(event.id).then((value) {
       Globals.currentUser.events.remove(event);
+      Globals.communityEvents = {};
+      Globals.followedBusinessesEvents = [];
       setState(() {
         hasRSVP = false;
         isLoadingRSVP = false;
@@ -285,6 +287,8 @@ class _EventViewState extends State<EventView> {
     });
     Backend.addRSVP(event.id).then((value) {
       Globals.currentUser.events.add(event);
+      Globals.communityEvents = {};
+      Globals.followedBusinessesEvents = [];
       setState(() {
         hasRSVP = true;
         isLoadingRSVP = false;

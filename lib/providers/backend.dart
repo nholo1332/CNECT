@@ -123,4 +123,38 @@ class Backend {
       });
     }
   }
+
+  static Future unfollowBusiness(String businessId) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + await generateToken(),
+      'Content-Type': 'application/json',
+    };
+
+    var client = new RetryClient(new http.Client(), retries: 3);
+    return await client.post(
+      baseURL + '/businesses/unfollow/' + businessId,
+      headers: headers,
+    ).then((res) {
+      return res.statusCode;
+    }).catchError((error) {
+      throw error;
+    });
+  }
+
+  static Future followBusiness(String businessId) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + await generateToken(),
+      'Content-Type': 'application/json',
+    };
+
+    var client = new RetryClient(new http.Client(), retries: 3);
+    return await client.post(
+      baseURL + '/businesses/follow/' + businessId,
+      headers: headers,
+    ).then((res) {
+      return res.statusCode;
+    }).catchError((error) {
+      throw error;
+    });
+  }
 }

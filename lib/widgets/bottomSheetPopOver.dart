@@ -13,7 +13,11 @@ class BottomSheetPopOver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(12),
+      margin: EdgeInsets.only(
+        bottom: 25,
+        left: 12,
+        right: 12,
+      ),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,

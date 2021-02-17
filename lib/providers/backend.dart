@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cnect/models/business.dart';
+import 'package:cnect/models/event.dart';
 import 'package:cnect/models/user.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -156,5 +157,64 @@ class Backend {
     }).catchError((error) {
       throw error;
     });
+  }
+
+  static Future<List<Event>> getAllCommunityEvents(String communityId) async {
+    if ( ( Globals.communityEvents ?? {} ).containsKey(communityId) ) {
+      return Globals.communityEvents[communityId];
+    } else {
+      Map<String, String> headers = {
+        'Authorization': 'Bearer ' + await generateToken(),
+        'Content-Type': 'application/json',
+      };
+
+      var client = new RetryClient(new http.Client(), retries: 3);
+      return await client.get(
+        baseURL + '/events/getAll/community/' + communityId,
+        headers: headers,
+      ).then((res) {
+        Map<String, dynamic> data = json.decode(res.body);
+        List<Event> events = data['events'] != []
+            ? data['events'].map((item) => Event.fromJson(item)).toList().cast<Event>()
+            : new List<Event>();
+        if ( Globals.communityEvents == null ) {
+          Map<String, List<Event>> newEvent = {
+            communityId: events,
+          };
+          Globals.communityEvents = newEvent;
+        } else {
+          Globals.communityEvents[communityId] = events;
+        }
+        return events;
+      }).catchError((error) {
+        throw error;
+      });
+    }
+  }
+
+  static Future<List<Business>> getAllFollowedBusinessesEvents() async {
+    if ( Globals.followedBusinessesEvents.length > 0 ) {
+      return Globals.followedBusinessesEvents;
+    } else {
+      Map<String, String> headers = {
+        'Authorization': 'Bearer ' + await generateToken(),
+        'Content-Type': 'application/json',
+      };
+
+      var client = new RetryClient(new http.Client(), retries: 3);
+      return await client.get(
+        baseURL + '/events/getAll/followedBusinesses',
+        headers: headers,
+      ).then((res) {
+        Map<String, dynamic> data = json.decode(res.body);
+        List<Business> businesses = data['businesses'] != []
+            ? data['businesses'].map((item) => Business.fromJson(item)).toList().cast<Business>()
+            : new List<Business>();
+        Globals.followedBusinessesEvents = businesses;
+        return businesses;
+      }).catchError((error) {
+        throw error;
+      });
+    }
   }
 }

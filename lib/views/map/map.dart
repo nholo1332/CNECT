@@ -2,8 +2,10 @@ import 'package:cnect/models/business.dart';
 import 'package:cnect/models/community.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
+import 'package:cnect/widgets/largeRoundedButton.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class MapView extends StatefulWidget {
@@ -31,6 +33,8 @@ class _MapViewState extends State<MapView> {
   List<Business> businesses;
 
   Business selectedBusiness;
+
+  bool isLoadingFollowStatus = false;
 
   final double initFabHeight = 120;
   double fabHeight = 120;
@@ -196,6 +200,7 @@ class _MapViewState extends State<MapView> {
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
+                      selectedBusiness = null;
                       selectedCommunity = value;
                       communityCenter = new LatLng(selectedCommunity.location.lat, selectedCommunity.location.long);
                     });
@@ -269,10 +274,215 @@ class _MapViewState extends State<MapView> {
               ],
             ),
             SizedBox(height: 36.0),
+            Row(
+              children: [
+                Expanded(
+                  child: LargeRoundedButton(
+                    horizontalMargin: 10,
+                    backgroundColor: Theme.of(context).accentColor,
+                    childWidget: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.near_me,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'Get Directions',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTapAction: () {
+                      MapsLauncher.launchQuery(selectedBusiness.location.address);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: buildFollowButton(),
+                ),
+              ],
+            ),
+            SizedBox(height: 36),
+            Container(
+              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'About',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 12.0),
+                  Text(
+                    selectedBusiness.description,
+                    softWrap: true,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 36),
+            Container(
+              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Community',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 12.0),
+                  buildCommunityCard(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildCommunityCard() {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 5,
+        right: 5,
+      ),
+      child: Card(
+        elevation: 2,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(
+                Icons.location_city,
+                size: 35,
+              ),
+              title: Text(selectedCommunity.name),
+              subtitle: selectedCommunity.description != ''
+                  ? Text(selectedCommunity.description)
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildFollowButton() {
+    if ( Globals.currentUser.followedBusinesses.contains(selectedBusiness.id) ) {
+      return LargeRoundedButton(
+        horizontalMargin: 10,
+        backgroundColor: Theme.of(context).primaryColor,
+        childWidget: isLoadingFollowStatus ? CircularProgressIndicator() : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.remove_circle_outline_rounded,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              'Unfollow',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        onTapAction: isLoadingFollowStatus
+            ? null
+            : unfollowBusiness,
+      );
+    } else {
+      return LargeRoundedButton(
+        horizontalMargin: 10,
+        backgroundColor: Theme.of(context).primaryColor,
+        childWidget: isLoadingFollowStatus ? CircularProgressIndicator() : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.add_circle_outline_rounded,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              'Follow',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        onTapAction: isLoadingFollowStatus
+            ? null
+            : followBusiness,
+      );
+    }
+  }
+
+  void unfollowBusiness() {
+    setState(() {
+      isLoadingFollowStatus = true;
+    });
+    Backend.unfollowBusiness(selectedBusiness.id).then((value) {
+      setState(() {
+        Globals.currentUser.followedBusinesses.remove(selectedBusiness.id);
+        isLoadingFollowStatus = false;
+      });
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Unfollowed business'),
+        )
+      );
+    }).catchError((error) {
+      setState(() {
+        isLoadingFollowStatus = false;
+      });
+      scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text('Failed to unfollow business'),
+          )
+      );
+    });
+  }
+
+  void followBusiness() {
+    setState(() {
+      isLoadingFollowStatus = true;
+    });
+    Backend.followBusiness(selectedBusiness.id).then((value) {
+      setState(() {
+        Globals.currentUser.followedBusinesses.add(selectedBusiness.id);
+        isLoadingFollowStatus = false;
+      });
+      scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text('Followed business'),
+          )
+      );
+    }).catchError((error) {
+      setState(() {
+        isLoadingFollowStatus = false;
+      });
+      scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text('Failed to follow business'),
+          )
+      );
+    });
   }
 
 }

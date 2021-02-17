@@ -1,4 +1,5 @@
 import 'package:cnect/models/event.dart';
+import 'package:cnect/providers/globals.dart';
 import 'package:cnect/utils.dart';
 import 'package:cnect/widgets/eventListItem.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:intl/intl.dart';
 
 class DateStickyHeader {
 
-  List<Widget> buildSideHeaderGrids(BuildContext context, int firstIndex, int count, List<Event> events) {
+  List<Widget> buildSideHeaderGrids(BuildContext context, int firstIndex, int count, List<Event> events, { bool showCheckMark = false }) {
     return List.generate(1, (sliverIndex) {
       sliverIndex += firstIndex;
       return SliverStickyHeader(
@@ -25,6 +26,7 @@ class DateStickyHeader {
                 child: EventListItem(
                   events[firstIndex + i],
                   showDate: true,
+                  showCheckMark: Globals.currentUser.events.where((e) => e.id == events[i].id).isNotEmpty && showCheckMark,
                 ),
               ),
               childCount: count,

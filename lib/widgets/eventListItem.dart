@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 
 class EventListItem extends StatelessWidget {
 
-  EventListItem(this.event, {this.showDate = true});
+  EventListItem(this.event, {this.showDate = true, this.showCheckMark = false});
   final Event event;
   final bool showDate;
+  final bool showCheckMark;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,12 @@ class EventListItem extends StatelessWidget {
           );
         },
         child: ListTile(
+          trailing: showCheckMark
+              ? Icon(
+                Icons.check_circle,
+                color: Theme.of(context).primaryColor,
+              )
+              : null,
           title: Text(
             event.name,
             overflow: TextOverflow.fade,

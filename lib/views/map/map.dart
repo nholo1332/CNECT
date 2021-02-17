@@ -182,7 +182,7 @@ class _MapViewState extends State<MapView> {
             padding: EdgeInsets.only(top: 45),
             child: Card(
               child: Container(
-                width: 175,
+                width: 200,
                 height: 50,
                 alignment: Alignment.centerRight,
                 padding: EdgeInsets.only(
@@ -195,7 +195,11 @@ class _MapViewState extends State<MapView> {
                   items: communities.map((Community value) {
                     return DropdownMenuItem<Community>(
                       value: value,
-                      child: Text(value.name),
+                      child: Text(
+                        value.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     );
                   }).toList(),
                   onChanged: (value) {

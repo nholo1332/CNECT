@@ -237,12 +237,12 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
         firstIndex = i;
       }
 
-      if ( ( i + 1) == events.length && slivers.length == 0 ) {
+      if ( ( i + 1 ) == events.length ) {
         slivers.addAll(
           DateStickyHeader().buildSideHeaderGrids(
             context,
             firstIndex,
-            events.length,
+            events.length - firstIndex,
             events,
             showCheckMark: showCheckMark,
           ),
@@ -251,7 +251,10 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     }
 
     ScrollController scrollController = ScrollController(
-        initialScrollOffset: findScrollOffset(events.length),
+        initialScrollOffset: findScrollOffset(
+          events.length,
+          events,
+        ),
     );
     CustomScrollView scrollView = CustomScrollView(
       slivers: slivers,
@@ -404,10 +407,10 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     return scrollView;
   }
 
-  double findScrollOffset(int count) {
+  double findScrollOffset(int count, List<Event> events) {
     double itemHeight = 72;
     for ( int j = 0; j < count; j++ ) {
-      DateTime eventDate = Globals.currentUser.events[j].startTime;
+      DateTime eventDate = events[j].startTime;
       DateTime now = DateTime.now();
       if ( eventDate.year == now.year && eventDate.month == now.month ) {
         if ( Utils.isSameDate(eventDate, now) ) {

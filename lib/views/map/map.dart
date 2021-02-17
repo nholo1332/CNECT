@@ -37,7 +37,7 @@ class _MapViewState extends State<MapView> {
   bool isLoadingFollowStatus = false;
 
   final double initFabHeight = 120;
-  double fabHeight = 120;
+  double fabHeight = 20;
   double panelHeightOpen = 500;
   double panelHeightClosed = 90;
 
@@ -207,6 +207,7 @@ class _MapViewState extends State<MapView> {
                       selectedBusiness = null;
                       selectedCommunity = value;
                       communityCenter = new LatLng(selectedCommunity.location.lat, selectedCommunity.location.long);
+                      fabHeight = 20;
                     });
                   },
                 ),
@@ -230,6 +231,7 @@ class _MapViewState extends State<MapView> {
           position: LatLng(business.location.lat, business.location.long),
           onTap: () {
             setState(() {
+              fabHeight = panelHeightClosed + 20;
               selectedBusiness = business;
             });
           },

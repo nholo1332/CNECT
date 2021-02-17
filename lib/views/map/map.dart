@@ -261,7 +261,7 @@ class _MapViewState extends State<MapView> {
                   height: 5,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    borderRadius: BorderRadius.all(Radius.circular(12.0))
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
                 ),
               ],
@@ -274,12 +274,12 @@ class _MapViewState extends State<MapView> {
                   selectedBusiness.name,
                   style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 24.0,
+                    fontSize: 24,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 36.0),
+            SizedBox(height: 36),
             Row(
               children: [
                 Expanded(
@@ -315,9 +315,24 @@ class _MapViewState extends State<MapView> {
                 ),
               ],
             ),
+            SizedBox(height: 10),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+              ),
+              child: Text(
+                'View these business announcements directly in your Announcements feed by following them.',
+                softWrap: true,
+                textAlign: TextAlign.center,
+              ),
+            ),
             SizedBox(height: 36),
             Container(
-              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -325,7 +340,7 @@ class _MapViewState extends State<MapView> {
                     'About',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 12),
                   Text(
                     selectedBusiness.description,
                     softWrap: true,
@@ -335,7 +350,10 @@ class _MapViewState extends State<MapView> {
             ),
             SizedBox(height: 36),
             Container(
-              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -343,7 +361,7 @@ class _MapViewState extends State<MapView> {
                     'Community',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 12),
                   buildCommunityCard(),
                 ],
               ),

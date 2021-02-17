@@ -159,12 +159,15 @@ class _MapViewState extends State<MapView> {
                   ),
                 );
               } else if ( snapshot.hasError ) {
-                scaffoldKey.currentState.showSnackBar(
-                  SnackBar(
-                    content: Text('Failed to load map data'),
+                return Center(
+                  child: Text(
+                    'Failed to load map data',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 );
-                return Container();
               } else {
                 return Container(
                   width: double.infinity,
@@ -465,6 +468,7 @@ class _MapViewState extends State<MapView> {
     Backend.unfollowBusiness(selectedBusiness.id).then((value) {
       setState(() {
         Globals.currentUser.followedBusinesses.remove(selectedBusiness.id);
+        Globals.followedBusinessesEvents = [];
         isLoadingFollowStatus = false;
       });
       scaffoldKey.currentState.showSnackBar(
@@ -491,6 +495,7 @@ class _MapViewState extends State<MapView> {
     Backend.followBusiness(selectedBusiness.id).then((value) {
       setState(() {
         Globals.currentUser.followedBusinesses.add(selectedBusiness.id);
+        Globals.followedBusinessesEvents = [];
         isLoadingFollowStatus = false;
       });
       scaffoldKey.currentState.showSnackBar(

@@ -162,6 +162,8 @@ class _EventViewState extends State<EventView> {
                           ),
                           child: GoogleMap(
                             onMapCreated: _onMapCreated,
+                            rotateGesturesEnabled: false,
+                            tiltGesturesEnabled: false,
                             zoomGesturesEnabled: false,
                             myLocationButtonEnabled: false,
                             scrollGesturesEnabled: false,

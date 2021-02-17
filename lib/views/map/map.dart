@@ -149,6 +149,7 @@ class _MapViewState extends State<MapView> {
                 return GoogleMap(
                   onMapCreated: _onMapCreated,
                   myLocationButtonEnabled: false,
+                  tiltGesturesEnabled: false,
                   zoomGesturesEnabled: true,
                   zoomControlsEnabled: true,
                   markers: markers,
@@ -322,7 +323,7 @@ class _MapViewState extends State<MapView> {
                 right: 24,
               ),
               child: Text(
-                'View these business announcements directly in your Announcements feed by following them.',
+                'View these business announcements directly in your Announcements feed and All Events by following them.',
                 softWrap: true,
                 textAlign: TextAlign.center,
               ),

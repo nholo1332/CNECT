@@ -20,6 +20,8 @@ class _LoginViewState extends State<LoginView> {
   bool isLoading = false;
 
   FirebaseAuth auth = FirebaseAuth.instance;
+  
+  // TODO: Add privacy policy page
 
   @override
   Widget build(BuildContext context) {

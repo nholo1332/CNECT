@@ -26,7 +26,7 @@ class DateStickyHeader {
                 child: EventListItem(
                   events[firstIndex + i],
                   showDate: true,
-                  showCheckMark: Globals.currentUser.events.where((e) => e.id == events[i].id).isNotEmpty && showCheckMark,
+                  showCheckMark: Globals.currentUser.events.where((e) => e.id == events[firstIndex + i].id).isNotEmpty && showCheckMark,
                 ),
               ),
               childCount: count,

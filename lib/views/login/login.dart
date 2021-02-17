@@ -20,7 +20,7 @@ class _LoginViewState extends State<LoginView> {
   bool isLoading = false;
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  
+
   // TODO: Add privacy policy page
 
   @override
@@ -179,7 +179,7 @@ class _LoginViewState extends State<LoginView> {
                               ),
                             ),
                             onTapAction: () {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (BuildContext context) => SignUpView(),
                                 ),

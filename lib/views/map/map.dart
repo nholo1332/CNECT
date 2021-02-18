@@ -28,8 +28,6 @@ class _MapViewState extends State<MapView> {
 
   List<Community> communities;
 
-  Community selectedCommunity;
-
   List<Business> businesses;
 
   Business selectedBusiness;
@@ -44,8 +42,13 @@ class _MapViewState extends State<MapView> {
   void initState() {
     super.initState();
     communities = Globals.currentUser.communities;
-    selectedCommunity = communities.first;
-    communityCenter = new LatLng(selectedCommunity.location.lat, selectedCommunity.location.long);
+    if ( Globals.selectedCommunity == null ) {
+      Globals.selectedCommunity = communities.first;
+    }
+    communityCenter = new LatLng(
+      Globals.selectedCommunity.location.lat,
+      Globals.selectedCommunity.location.long,
+    );
     BitmapDescriptor.fromAssetImage(
       ImageConfiguration(),
       'assets/images/mapMarker.png',
@@ -142,7 +145,7 @@ class _MapViewState extends State<MapView> {
         alignment: Alignment.topCenter,
         children: [
           FutureBuilder<List<Business>>(
-            future: Backend.getBusinesses(selectedCommunity.id),
+            future: Backend.getBusinesses(Globals.selectedCommunity.id),
             builder: (BuildContext context, AsyncSnapshot<List<Business>> snapshot) {
               if ( snapshot.hasData ) {
                 businesses = snapshot.data;
@@ -194,7 +197,7 @@ class _MapViewState extends State<MapView> {
                   right: 10,
                 ),
                 child: DropdownButton<Community>(
-                  value: selectedCommunity,
+                  value: Globals.selectedCommunity,
                   isExpanded: true,
                   items: communities.map((Community value) {
                     return DropdownMenuItem<Community>(
@@ -209,8 +212,11 @@ class _MapViewState extends State<MapView> {
                   onChanged: (value) {
                     setState(() {
                       selectedBusiness = null;
-                      selectedCommunity = value;
-                      communityCenter = new LatLng(selectedCommunity.location.lat, selectedCommunity.location.long);
+                      Globals.selectedCommunity = value;
+                      communityCenter = new LatLng(
+                        Globals.selectedCommunity.location.lat,
+                        Globals.selectedCommunity.location.long,
+                      );
                       fabHeight = 20;
                     });
                   },
@@ -232,7 +238,10 @@ class _MapViewState extends State<MapView> {
         Marker(
           markerId: MarkerId(business.id),
           icon: pinLocationIcon,
-          position: LatLng(business.location.lat, business.location.long),
+          position: LatLng(
+            business.location.lat,
+            business.location.long,
+          ),
           onTap: () {
             setState(() {
               fabHeight = panelHeightClosed + 20;
@@ -392,9 +401,9 @@ class _MapViewState extends State<MapView> {
                 Icons.location_city,
                 size: 35,
               ),
-              title: Text(selectedCommunity.name),
-              subtitle: selectedCommunity.description != ''
-                  ? Text(selectedCommunity.description)
+              title: Text(Globals.selectedCommunity.name),
+              subtitle: Globals.selectedCommunity.description != ''
+                  ? Text(Globals.selectedCommunity.description)
                   : null,
             ),
           ],

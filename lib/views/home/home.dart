@@ -21,8 +21,6 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
   TabController controller;
   int selectedIndex = 0;
 
-  Community selectedCommunity;
-
   List<Widget> tabs = [
     Tab(
       child: Text('My Events'),
@@ -49,7 +47,9 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
       });
     });
 
-    selectedCommunity = Globals.currentUser.communities.first;
+    if ( Globals.selectedCommunity == null ) {
+      Globals.selectedCommunity = Globals.currentUser.communities.first;
+    }
   }
 
   @override
@@ -145,7 +145,7 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
                                         right: 25,
                                       ),
                                       child: DropdownButton<Community>(
-                                        value: selectedCommunity,
+                                        value: Globals.selectedCommunity,
                                         isExpanded: true,
                                         items: Globals.currentUser.communities.map((Community value) {
                                           return DropdownMenuItem<Community>(
@@ -159,7 +159,7 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
                                         }).toList(),
                                         onChanged: (value) {
                                           setState(() {
-                                            selectedCommunity = value;
+                                            Globals.selectedCommunity = value;
                                           });
                                         },
                                       ),
@@ -267,7 +267,7 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
   Widget buildCommunityEvents(BuildContext context) {
     if ( Globals.currentUser.communities.length != 0 ) {
       return FutureBuilder<List<Event>>(
-        future: Backend.getAllCommunityEvents(selectedCommunity.id),
+        future: Backend.getAllCommunityEvents(Globals.selectedCommunity.id),
         builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
           if ( snapshot.hasData ) {
             return Padding(

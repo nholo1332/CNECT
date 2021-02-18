@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cnect/models/announcement.dart';
 import 'package:cnect/models/business.dart';
 import 'package:cnect/models/event.dart';
 import 'package:cnect/models/user.dart';
@@ -212,6 +213,39 @@ class Backend {
             : new List<Business>();
         Globals.followedBusinessesEvents = businesses;
         return businesses;
+      }).catchError((error) {
+        throw error;
+      });
+    }
+  }
+
+  static Future<List<Announcement>> getAllCommunityAnnouncements(String communityId) async {
+    if ( ( Globals.communityAnnouncements ?? {} ).containsKey(communityId) ) {
+      return Globals.communityAnnouncements[communityId];
+    } else {
+      Map<String, String> headers = {
+        'Authorization': 'Bearer ' + await generateToken(),
+        'Content-Type': 'application/json',
+      };
+
+      var client = new RetryClient(new http.Client(), retries: 3);
+      return await client.get(
+        baseURL + '/announcements/getAll/community/' + communityId,
+        headers: headers,
+      ).then((res) {
+        Map<String, dynamic> data = json.decode(res.body);
+        List<Announcement> announcements = data['events'] != []
+            ? data['events'].map((item) => Announcement.fromJson(item)).toList().cast<Announcement>()
+            : new List<Announcement>();
+        if ( Globals.communityAnnouncements == null ) {
+          Map<String, List<Announcement>> newAnnouncements = {
+            communityId: announcements,
+          };
+          Globals.communityAnnouncements = newAnnouncements;
+        } else {
+          Globals.communityAnnouncements[communityId] = announcements;
+        }
+        return announcements;
       }).catchError((error) {
         throw error;
       });

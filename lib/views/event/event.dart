@@ -241,6 +241,7 @@ class _EventViewState extends State<EventView> {
                       SizedBox(height: 20),
                       buildCommunityText(),
                       buildCommunity(),
+                      SizedBox(height: 20),
                     ],
                   ),
                 ),

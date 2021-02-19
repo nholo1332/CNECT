@@ -1,9 +1,11 @@
 import 'package:cnect/models/announcement.dart';
+import 'package:cnect/models/business.dart';
 import 'package:cnect/models/community.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -207,50 +209,54 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     return ListView.builder(
       itemCount: announcements.length,
       itemBuilder: (context, index) {
-        return Container(
-          height: 115,
-          child: Card(
-            elevation: 2,
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                child: Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: Icon(
-                            Icons.campaign,
-                            size: 35,
-                          ),
-                          title: Text(announcements[index].title),
-                          subtitle: Text(
-                            announcements[index].description,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            DateFormat('MMMM dd, yyyy').format(announcements[index].publishDate),
-                          ),
-                        ),
-                      ],
+        return buildAnnouncementItem(announcements[index]);
+      },
+    );
+  }
+
+  Widget buildAnnouncementItem(Announcement announcement) {
+    return Container(
+      height: 115,
+      child: Card(
+        elevation: 2,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            child: Container(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(
+                        Icons.campaign,
+                        size: 35,
+                      ),
+                      title: Text(announcement.title),
+                      subtitle: Text(
+                        announcement.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        DateFormat('MMMM dd, yyyy').format(announcement.publishDate),
+                      ),
+                    ),
+                  ],
                 ),
-                onTap: () {
-                  setState(() {
-                    selectedAnnouncement = announcements[index];
-                  });
-                },
               ),
             ),
+            onTap: () {
+              setState(() {
+                selectedAnnouncement = announcement;
+              });
+            },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -302,10 +308,6 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
         ),
       );
     }
-  }
-
-  Widget buildBusinessAnnouncements(BuildContext context) {
-    return Container();
   }
 
   Widget panelBuilder(ScrollController sc) {
@@ -470,6 +472,129 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
         ),
       ),
     );
+  }
+
+  Widget buildBusinessAnnouncements(BuildContext context) {
+    if ( Globals.currentUser.followedBusinesses.length != 0 ) {
+      return FutureBuilder<List<Business>>(
+        future: Backend.getAllFollowedBusinessesAnnouncements(),
+        builder: (BuildContext context, AsyncSnapshot<List<Business>> snapshot) {
+          if ( snapshot.hasData ) {
+            return Container(
+              child: Column(
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        top: 10,
+                        left: 10,
+                        right: 10,
+                        bottom: 5,
+                      ),
+                      child: Text(
+                        'View announcements from businesses you follow',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: buildBusinessAnnouncementList(
+                        context,
+                        snapshot.data,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else if ( snapshot.hasError ) {
+            return Center(
+              child: Text(
+                'Failed to load business announcements',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            );
+          } else {
+            return Container(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                ],
+              ),
+            );
+          }
+        },
+      );
+    } else {
+      return Center(
+        child: Text(
+          'You are currently not following any businesses.',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+      );
+    }
+  }
+
+  buildBusinessAnnouncementList(BuildContext context, List<Business> businesses) {
+    List<Widget> slivers = List<Widget>();
+
+    businesses.forEach((b) {
+      slivers.addAll(
+        buildAnnouncementStickHeaders(
+          b.announcements,
+          b.name,
+        ),
+      );
+    });
+
+    CustomScrollView scrollView = CustomScrollView(
+        slivers: slivers
+    );
+
+    return scrollView;
+  }
+
+  List<Widget> buildAnnouncementStickHeaders(List<Announcement> announcements, String businessName) {
+    return List.generate(1, (sliverIndex) {
+      return SliverStickyHeader(
+        header: Container(
+          height: 60,
+          color: Theme.of(context).accentColor,
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          alignment: Alignment.centerLeft,
+          child: Text(
+            businessName,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate((context, i) =>
+              GestureDetector(
+                child: buildAnnouncementItem(announcements[i]),
+              ),
+            childCount: announcements.length,
+          ),
+        ),
+      );
+    });
   }
 
   openLink(String url) async {

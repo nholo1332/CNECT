@@ -1,3 +1,4 @@
+import 'package:cnect/models/announcement.dart';
 import 'package:cnect/models/event.dart';
 import 'package:cnect/models/location.dart';
 
@@ -7,6 +8,7 @@ class Business {
   String description;
   LocationData location;
   List<Event> events;
+  List<Announcement> announcements;
 
   Business({
     this.id,
@@ -14,6 +16,7 @@ class Business {
     this.description,
     this.location,
     this.events,
+    this.announcements,
   });
 
   Business.fromJson(Map<String, dynamic> data) {
@@ -24,6 +27,9 @@ class Business {
     events = data['events'] != []
         ? data['events'].map((item) => Event.fromJson(item)).toList().cast<Event>()
         : new List<Event>();
+    announcements = data['announcements'] != []
+        ? data['announcements'].map((item) => Announcement.fromJson(item)).toList().cast<Announcement>()
+        : new List<Announcement>();
   }
 
   Map<String, dynamic> toJson() => {

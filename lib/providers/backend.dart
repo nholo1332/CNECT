@@ -253,6 +253,32 @@ class Backend {
     }
   }
 
+  static Future<List<Business>> getAllFollowedBusinessesAnnouncements() async {
+    if ( Globals.businessAnnouncements.length > 0 ) {
+      return Globals.businessAnnouncements;
+    } else {
+      Map<String, String> headers = {
+        'Authorization': 'Bearer ' + await generateToken(),
+        'Content-Type': 'application/json',
+      };
+
+      var client = new RetryClient(new http.Client(), retries: 3);
+      return await client.get(
+        baseURL + '/announcements/getAll/followedBusinesses',
+        headers: headers,
+      ).then((res) {
+        Map<String, dynamic> data = json.decode(res.body);
+        List<Business> businesses = data['businesses'] != []
+            ? data['businesses'].map((item) => Business.fromJson(item)).toList().cast<Business>()
+            : new List<Business>();
+        Globals.businessAnnouncements = businesses;
+        return businesses;
+      }).catchError((error) {
+        throw error;
+      });
+    }
+  }
+
   static Future saveName(String name, String description) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),

@@ -13,6 +13,7 @@ class Globals {
   static Map<String, List<Event>> communityEvents = {};
   static List<Business> followedBusinessesEvents = [];
   static Map<String, List<Announcement>> communityAnnouncements = {};
+  static List<Business> businessAnnouncements = [];
   static Community selectedCommunity;
   static PackageInfo packageInfo;
 }

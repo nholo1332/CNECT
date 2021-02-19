@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cnect/models/announcement.dart';
+import 'package:cnect/models/bugReport.dart';
 import 'package:cnect/models/business.dart';
 import 'package:cnect/models/event.dart';
 import 'package:cnect/models/user.dart';
@@ -266,6 +267,24 @@ class Backend {
         'name': name,
         'description': description,
       }),
+    ).then((res) {
+      return res.statusCode;
+    }).catchError((error) {
+      throw error;
+    });
+  }
+
+  static Future reportBug(BugReport report) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + await generateToken(),
+      'Content-Type': 'application/json',
+    };
+
+    var client = new RetryClient(new http.Client(), retries: 3);
+    return await client.post(
+      baseURL + '/bugReports/report',
+      headers: headers,
+      body: jsonEncode(report.toJson()),
     ).then((res) {
       return res.statusCode;
     }).catchError((error) {

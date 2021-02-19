@@ -1,4 +1,5 @@
 import 'package:cnect/providers/globals.dart';
+import 'package:cnect/views/bugReport/bugReport.dart';
 import 'package:cnect/views/profile/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +117,12 @@ class ProfileBottomSheet {
                       leading: Icon(Icons.bug_report),
                       title: Text('Report a Bug'),
                       onTap: () {
-                        // TODO: Add bug report view
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BugReportView(),
+                          ),
+                        );
                       },
                     ),
                   ],

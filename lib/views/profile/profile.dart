@@ -90,7 +90,7 @@ class _ProfileViewState extends State<ProfileView> {
                 ],
               ),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 10),
             Expanded(
               child: Container(
                 width: double.infinity,

@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cnect/themes/dark.dart';
 import 'package:cnect/themes/light.dart';
 import 'package:cnect/manager.dart';
+import 'package:package_info/package_info.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   void fetchData() async {
+    Globals.packageInfo = await PackageInfo.fromPlatform();
     if ( auth.currentUser != null ) {
       Backend.getUser().then((value) {
         Globals.currentUser = value;

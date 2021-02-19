@@ -12,8 +12,8 @@ import 'package:http/http.dart' as http;
 
 class Backend {
 
-  static final String baseURL = 'http://127.0.0.1:3000';
-  //static final String baseURL = 'http://192.168.0.11:3000';
+  //static final String baseURL = 'http://127.0.0.1:3000';
+  static final String baseURL = 'https://cnect.clfbla.org';
 
   static FirebaseAuth auth = FirebaseAuth.instance;
 

@@ -86,6 +86,22 @@ class ProfileBottomSheet {
                         horizontal: 35,
                         vertical: 6,
                       ),
+                      leading: Icon(Icons.bug_report),
+                      title: Text('Report a Bug'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BugReportView(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 35,
+                        vertical: 6,
+                      ),
                       leading: Icon(Icons.gavel),
                       title: Text('Licenses'),
                       onTap: () {
@@ -106,22 +122,6 @@ class ProfileBottomSheet {
                             ),
                           ),
                           applicationLegalese: '2020-2021 FBLA Mobile Application project created by Mitchel Beeson, Noah Holoubek, and Emily Loseke.',
-                        );
-                      },
-                    ),
-                    ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 35,
-                        vertical: 6,
-                      ),
-                      leading: Icon(Icons.bug_report),
-                      title: Text('Report a Bug'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BugReportView(),
-                          ),
                         );
                       },
                     ),

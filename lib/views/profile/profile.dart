@@ -35,6 +35,18 @@ class _ProfileViewState extends State<ProfileView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  FloatingActionButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    mini: true,
+                    child: Icon(
+                      Icons.arrow_back_ios_rounded,
+                      color: Colors.white,
+                    ),
+                  ),
                   Text(
                     'Profile',
                     style: TextStyle(
@@ -56,6 +68,7 @@ class _ProfileViewState extends State<ProfileView> {
             SizedBox(height: 50),
             Expanded(
               child: Container(
+                width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(

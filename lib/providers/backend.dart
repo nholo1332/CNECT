@@ -251,4 +251,25 @@ class Backend {
       });
     }
   }
+
+  static Future saveName(String name, String description) async {
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + await generateToken(),
+      'Content-Type': 'application/json',
+    };
+
+    var client = new RetryClient(new http.Client(), retries: 3);
+    return await client.post(
+      baseURL + '/user/edit',
+      headers: headers,
+      body: jsonEncode({
+        'name': name,
+        'description': description,
+      }),
+    ).then((res) {
+      return res.statusCode;
+    }).catchError((error) {
+      throw error;
+    });
+  }
 }

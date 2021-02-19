@@ -243,7 +243,7 @@ class _BugReportViewState extends State<BugReportView> {
         });
         scaffoldKey.currentState.showSnackBar(
           SnackBar(
-            content: Text('Bug report sent'),
+            content: Text('Bug report sent. Thank you!'),
           ),
         );
       }).catchError((error) {

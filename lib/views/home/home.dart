@@ -6,6 +6,7 @@ import 'package:cnect/providers/globals.dart';
 import 'package:cnect/utils.dart';
 import 'package:cnect/widgets/businessEventStickyHeader.dart';
 import 'package:cnect/widgets/dateStickyHeader.dart';
+import 'package:cnect/widgets/profileBottomSheet.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
@@ -78,12 +79,36 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    'Welcome,',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'Welcome,',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                        ),
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 25),
+                              child: InkWell(
+                                customBorder: new CircleBorder(),
+                                child: Icon(
+                                  Icons.account_circle,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                onTap: () => ProfileBottomSheet().showProfileBottomSheet(context),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
                   Text(

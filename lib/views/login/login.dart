@@ -1,4 +1,5 @@
 import 'package:cnect/main.dart';
+import 'package:cnect/views/privacyPolicy/privacyPolicy.dart';
 import 'package:cnect/views/signUp/signUp.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -182,6 +183,18 @@ class _LoginViewState extends State<LoginView> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (BuildContext context) => SignUpView(),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: 25),
+                          MaterialButton(
+                            child: Text('Privacy Policy'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PrivacyPolicyView(),
                                 ),
                               );
                             },

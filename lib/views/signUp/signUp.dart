@@ -1,6 +1,7 @@
 import 'package:cnect/main.dart';
 import 'package:cnect/models/user.dart';
 import 'package:cnect/providers/backend.dart';
+import 'package:cnect/views/privacyPolicy/privacyPolicy.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -202,6 +203,18 @@ class _SignUpViewState extends State<SignUpView> {
                             onTapAction: ( isLoading || email == '' || password == '' || name == '' )
                                 ? null
                                 : () => signUp(context),
+                          ),
+                          SizedBox(height: 25),
+                          MaterialButton(
+                            child: Text('Privacy Policy'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PrivacyPolicyView(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),

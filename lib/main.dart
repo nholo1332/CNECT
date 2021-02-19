@@ -21,7 +21,8 @@ class CNECT extends StatelessWidget {
       title: 'CNECT',
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
-      darkTheme: darkTheme,
+      // Enable dark theme once proper testing and modification has been completed
+      //darkTheme: darkTheme,
       home: SplashScreen(),
       routes: <String, WidgetBuilder>{
         '/manager': (BuildContext context) => Manager(),

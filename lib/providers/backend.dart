@@ -234,8 +234,8 @@ class Backend {
         headers: headers,
       ).then((res) {
         Map<String, dynamic> data = json.decode(res.body);
-        List<Announcement> announcements = data['events'] != []
-            ? data['events'].map((item) => Announcement.fromJson(item)).toList().cast<Announcement>()
+        List<Announcement> announcements = data['announcements'] != []
+            ? data['announcements'].map((item) => Announcement.fromJson(item)).toList().cast<Announcement>()
             : new List<Announcement>();
         if ( Globals.communityAnnouncements == null ) {
           Map<String, List<Announcement>> newAnnouncements = {

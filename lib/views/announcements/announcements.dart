@@ -227,7 +227,7 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
   // Create the item (card) shown in the announcement list
   Widget buildAnnouncementItem(Announcement announcement) {
     return Container(
-      height: 115,
+      height: 130,
       child: Card(
         elevation: 2,
         child: Material(
@@ -373,17 +373,15 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  selectedAnnouncement.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 24,
-                  ),
+            Flexible(
+              child: Text(
+                selectedAnnouncement.title,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24,
                 ),
-              ],
+              ),
             ),
             SizedBox(height: 25),
             Container(

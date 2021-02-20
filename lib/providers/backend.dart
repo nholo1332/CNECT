@@ -12,8 +12,8 @@ import 'package:cnect/providers/globals.dart';
 
 class Backend {
 
-  static final String baseURL = 'http://127.0.0.1:3000';
-  //static final String baseURL = 'https://cnect.clfbla.org';
+  //static final String baseURL = 'http://127.0.0.1:3000';
+  static final String baseURL = 'https://cnect.clfbla.org';
 
   static FirebaseAuth auth = FirebaseAuth.instance;
 

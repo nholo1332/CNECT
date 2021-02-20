@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ListItemWithAction extends StatelessWidget {
 
+  // Setup the widget's required parameters
   ListItemWithAction({
     @required this.title,
     @required this.leading,
@@ -14,7 +15,7 @@ class ListItemWithAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Build button and return Widget
+    // Build the custom button and return the Widget
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 24,

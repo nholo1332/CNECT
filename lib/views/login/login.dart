@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:cnect/main.dart';
 import 'package:cnect/views/privacyPolicy/privacyPolicy.dart';
 import 'package:cnect/views/signUp/signUp.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
   LoginView();
@@ -22,10 +23,9 @@ class _LoginViewState extends State<LoginView> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  // TODO: Add privacy policy page
-
   @override
   Widget build(BuildContext context) {
+    // Build the main body of the view
     return Scaffold(
       key: scaffoldKey,
       body: Container(
@@ -180,6 +180,9 @@ class _LoginViewState extends State<LoginView> {
                               ),
                             ),
                             onTapAction: () {
+                              // Move to the sign up view. Use the push to allow
+                              // for easily coming back to this view by calling
+                              // .pop() on the sign up view
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (BuildContext context) => SignUpView(),
@@ -191,6 +194,7 @@ class _LoginViewState extends State<LoginView> {
                           MaterialButton(
                             child: Text('Privacy Policy'),
                             onPressed: () {
+                              // Move to the privacy policy view
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -212,6 +216,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
+  // Send reset password link
   void resetPassword() {
     if ( email != '' ) {
       auth.sendPasswordResetEmail(email: email).then((value) {
@@ -236,6 +241,7 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
+  // Login user
   void login(BuildContext context) {
     // Ensure no snack bars are open (to prevent a stack of snack bars repeatedly appearing)
     scaffoldKey.currentState.removeCurrentSnackBar();

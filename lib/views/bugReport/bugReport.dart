@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:device_info/device_info.dart';
 
 import 'package:cnect/models/bugReport.dart';
 import 'package:cnect/providers/backend.dart';
-import 'package:device_info/device_info.dart';
-import 'package:flutter/material.dart';
 
 class BugReportView extends StatefulWidget {
   BugReportView();
@@ -30,6 +30,8 @@ class _BugReportViewState extends State<BugReportView> {
   @override
   void initState() {
     super.initState();
+    // Get the device info used for debugging and save based on current app
+    // platform
     if ( Platform.isIOS ) {
       deviceInfo.iosInfo.then((value) {
         setState(() {
@@ -47,6 +49,7 @@ class _BugReportViewState extends State<BugReportView> {
 
   @override
   Widget build(BuildContext context) {
+    // Create the main view body
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       key: scaffoldKey,
@@ -216,10 +219,14 @@ class _BugReportViewState extends State<BugReportView> {
     );
   }
 
+  // Check to ensure that the forms are filled
   bool canSendReport() {
     return ( bugReport.location ?? '' ) != '' && ( bugReport.description ?? '' ) != '' && ( bugReport.steps ?? '' ) != '';
   }
 
+  // Build the device info text. This functions removes the need for the same
+  // logic to be completed twice - in the widget builder and when submitting the
+  // report
   String getDeviceInfoText() {
     if ( Platform.isIOS && iosInfo != null ) {
       return 'iOS; ' + iosInfo.utsname.machine + '-' + iosInfo.systemVersion;
@@ -230,6 +237,7 @@ class _BugReportViewState extends State<BugReportView> {
     }
   }
 
+  // Send the bug report
   sendReport() {
     FocusScope.of(context).unfocus();
     if ( canSendReport() ) {
@@ -237,6 +245,7 @@ class _BugReportViewState extends State<BugReportView> {
         isSaving = true;
       });
       bugReport.deviceInfo = getDeviceInfoText();
+      // Call backend
       Backend.reportBug(bugReport).then((value) {
         setState(() {
           isSaving = false;

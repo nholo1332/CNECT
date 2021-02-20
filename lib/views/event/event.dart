@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+
 import 'package:cnect/models/community.dart';
 import 'package:cnect/models/event.dart';
 import 'package:cnect/providers/backend.dart';
@@ -5,10 +10,6 @@ import 'package:cnect/providers/globals.dart';
 import 'package:cnect/utils.dart';
 import 'package:cnect/views/event/socialSheet.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
-import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 
 class EventView extends StatefulWidget {
   EventView(this.event);
@@ -38,6 +39,8 @@ class _EventViewState extends State<EventView> {
 
   void initState() {
     super.initState();
+    // Set the current event and create the LatLng positions for the center of
+    // the event view
     event = widget.event;
     eventCenter = LatLng(event.location.lat, event.location.long);
     communityIndex = Globals.currentUser.communities.indexWhere((c) => c.id == event.community);
@@ -48,6 +51,7 @@ class _EventViewState extends State<EventView> {
   Widget build(BuildContext context) {
     double textWrapContainerWidth = MediaQuery.of(context).size.width * 0.8;
 
+    // Build main body
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       key: scaffoldKey,
@@ -253,6 +257,8 @@ class _EventViewState extends State<EventView> {
     );
   }
 
+  // Function to show loading indicator, call Backend to remove RSVP, and update
+  // the user with the completion status
   void redactRsvp() {
     setState(() {
       isLoadingRSVP = true;
@@ -282,6 +288,8 @@ class _EventViewState extends State<EventView> {
     });
   }
 
+  // Function to show loading indicator, call Backend to add an RSVP, and update
+  // the user with the completion status
   void rsvp() {
     setState(() {
       isLoadingRSVP = true;
@@ -311,10 +319,16 @@ class _EventViewState extends State<EventView> {
     });
   }
 
+  // Callback received once the Google Map has been created. We use this
+  // callback to create and add the markers once we know the data is loaded and
+  // the map has been successfully drawn on the view
   void _onMapCreated(GoogleMapController controller)async  {
     mapController = controller;
 
-    List<Placemark> place = await placemarkFromCoordinates(event.location.lat, event.location.long);
+    List<Placemark> place = await placemarkFromCoordinates(
+      event.location.lat,
+      event.location.long,
+    );
     Placemark placeMark = place[0];
     setState(() {
       markers.add(
@@ -332,6 +346,9 @@ class _EventViewState extends State<EventView> {
     });
   }
 
+  // Build the RSVP widget. It is easier to understand and update in the future
+  // if some logic is split away from the main view rendering. It also makes
+  // the view code easier and less bulky
   Widget buildRSVP() {
     if ( hasRSVP ) {
       return MaterialButton(
@@ -366,6 +383,8 @@ class _EventViewState extends State<EventView> {
     }
   }
 
+  // Build community text if the event is associated with the community (and
+  // that data has loaded)
   Widget buildCommunityText() {
     if ( communityIndex >= 0 ) {
       return Padding(
@@ -389,6 +408,7 @@ class _EventViewState extends State<EventView> {
     }
   }
 
+  // Build the community caed found at the bottom of the event info
   Widget buildCommunity() {
     if ( communityIndex >= 0 ) {
       Community community = Globals.currentUser.communities[communityIndex];

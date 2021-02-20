@@ -1,14 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:intl/intl.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:cnect/models/announcement.dart';
 import 'package:cnect/models/business.dart';
 import 'package:cnect/models/community.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:intl/intl.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AnnouncementsView extends StatefulWidget {
   AnnouncementsView();
@@ -43,17 +44,21 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
   void initState() {
     super.initState();
     panelController = new PanelController();
+    // Initialize the tab bar controller and set the current view to the
+    // current (first) tab
     controller = TabController(
       length: tabs.length,
       vsync: this,
     );
-
     controller.addListener(() {
       setState(() {
         selectedIndex = controller.index;
       });
     });
 
+    // Check to see if globals has a selected community. If not, set the
+    // selected community to the first in the list. This allows us to persist
+    // the selected community across each app view
     if ( Globals.selectedCommunity == null ) {
       Globals.selectedCommunity = Globals.currentUser.communities.first;
     }
@@ -61,6 +66,7 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    // Return the main view structure as a scaffold
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: buildMain(),
@@ -69,8 +75,10 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
 
   Widget buildMain() {
     if ( selectedAnnouncement == null ) {
+      // Hide the SlidingUpPanel if there is no selected community
       return body();
     } else {
+      // If there is a selected community, show the sliding panel
       return SlidingUpPanel(
         maxHeight: panelHeightOpen,
         minHeight: panelHeightClosed,
@@ -88,6 +96,7 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     }
   }
 
+  // Build the main body
   Widget body() {
     return Container(
       width: double.infinity,
@@ -204,7 +213,8 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
       ),
     );
   }
-  
+
+  // Create the announcement list
   buildAnnouncementList(BuildContext context, List<Announcement> announcements) {
     return ListView.builder(
       itemCount: announcements.length,
@@ -214,6 +224,7 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     );
   }
 
+  // Create the item (card) shown in the announcement list
   Widget buildAnnouncementItem(Announcement announcement) {
     return Container(
       height: 115,
@@ -251,6 +262,7 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
             ),
             onTap: () {
               setState(() {
+                // Update the selected announcement to update the SlidingUpPanel
                 selectedAnnouncement = announcement;
               });
             },
@@ -260,6 +272,8 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     );
   }
 
+  // Build the body for the community announcements. Use a Future to await the
+  // Backend function response
   Widget buildCommunityAnnouncements(BuildContext context) {
     if ( Globals.currentUser.communities.length != 0 ) {
       return FutureBuilder<List<Announcement>>(
@@ -310,6 +324,7 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     }
   }
 
+  // Build the content found in the SlidingUpPanel
   Widget panelBuilder(ScrollController sc) {
     return MediaQuery.removePadding(
       context: context,
@@ -447,6 +462,8 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     );
   }
 
+  // Build the community info card found at the bottom of the announcement
+  // info SlidingUpPanel
   Widget buildCommunityCard() {
     return Padding(
       padding: EdgeInsets.only(
@@ -474,6 +491,9 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     );
   }
 
+  // Similar to the community announcements, build the business announcements.
+  // Because the business announcements use a sticky header to differentiate
+  // between the different businesses, some changes are seen
   Widget buildBusinessAnnouncements(BuildContext context) {
     if ( Globals.currentUser.followedBusinesses.length != 0 ) {
       return FutureBuilder<List<Business>>(
@@ -547,6 +567,8 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     }
   }
 
+  // Create a list of Slivers (items separate from the main list items) that
+  // will hold our sticky headers and their content
   buildBusinessAnnouncementList(BuildContext context, List<Business> businesses) {
     List<Widget> slivers = List<Widget>();
 
@@ -566,6 +588,9 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     return scrollView;
   }
 
+  // Create the sticky header. To make it easier to understand without having
+  // multiple view children intertwined, we declared the sticky headers in this
+  // file to make calling setState much easier for the time being
   List<Widget> buildAnnouncementStickHeaders(List<Announcement> announcements, String businessName) {
     return List.generate(1, (sliverIndex) {
       return SliverStickyHeader(
@@ -597,6 +622,7 @@ class _AnnouncementsViewState extends State<AnnouncementsView> with SingleTicker
     });
   }
 
+  // Open the link found in the announcement
   openLink(String url) async {
     if (await canLaunch(url)) {
       await launch(url);

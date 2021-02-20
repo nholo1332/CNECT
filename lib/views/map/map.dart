@@ -1,12 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
 import 'package:cnect/models/business.dart';
 import 'package:cnect/models/community.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:maps_launcher/maps_launcher.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class MapView extends StatefulWidget {
   MapView();
@@ -41,14 +42,17 @@ class _MapViewState extends State<MapView> {
 
   void initState() {
     super.initState();
+    // Check global selected community
     communities = Globals.currentUser.communities;
     if ( Globals.selectedCommunity == null ) {
       Globals.selectedCommunity = communities.first;
     }
+    // Set community center set when creating community
     communityCenter = new LatLng(
       Globals.selectedCommunity.location.lat,
       Globals.selectedCommunity.location.long,
     );
+    // Create the custom map icon we see to mark businesses on CNECT
     BitmapDescriptor.fromAssetImage(
       ImageConfiguration(),
       'assets/images/mapMarker.png',
@@ -59,6 +63,7 @@ class _MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
+    // Call the main build function
     return Scaffold(
       body: buildMain(),
     );
@@ -66,6 +71,7 @@ class _MapViewState extends State<MapView> {
 
   Widget buildMain() {
     if ( selectedBusiness == null ) {
+      // Hide the SlidingUpPanel because no business has been selected
       return Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -94,6 +100,8 @@ class _MapViewState extends State<MapView> {
         ],
       );
     } else {
+      // Show the sliding up panel because a business on the map has been
+      // selected
       return Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -109,7 +117,9 @@ class _MapViewState extends State<MapView> {
               topLeft: Radius.circular(60),
               topRight: Radius.circular(60),
             ),
-            onPanelSlide: (double pos) => setState((){
+            onPanelSlide: (double pos) => setState(() {
+              // Move the FAB (re-center) button up to accommodate for the
+              // SlidingUpPanel movement
               fabHeight = pos * ( panelHeightOpen - panelHeightClosed ) + initFabHeight;
             }),
           ),
@@ -140,10 +150,14 @@ class _MapViewState extends State<MapView> {
   }
 
   Widget body() {
+    // Create and display the map and main body content and the community
+    // selector on top
     return Container(
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
+          // Use a Future to load the data and display a loading indicator in
+          // the mean time
           FutureBuilder<List<Business>>(
             future: Backend.getBusinesses(Globals.selectedCommunity.id),
             builder: (BuildContext context, AsyncSnapshot<List<Business>> snapshot) {
@@ -211,6 +225,8 @@ class _MapViewState extends State<MapView> {
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
+                      // Remove selected business as the community may have
+                      // changed
                       selectedBusiness = null;
                       Globals.selectedCommunity = value;
                       communityCenter = new LatLng(
@@ -229,6 +245,8 @@ class _MapViewState extends State<MapView> {
     );
   }
 
+  // Callback ran after the map has been created. This is where the business
+  // icons are added to the map and their touch event assigned
   void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
     markers = {};
@@ -252,11 +270,13 @@ class _MapViewState extends State<MapView> {
       );
     });
     setState(() {
+      // Refresh the view with the map markers
       markers = markerData;
     });
   }
 
   Widget panelBuilder(ScrollController sc) {
+    // Build the SlidingUpPanel content
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,
@@ -319,6 +339,7 @@ class _MapViewState extends State<MapView> {
                       ],
                     ),
                     onTapAction: () {
+                      // Open map app to navigate to the address
                       MapsLauncher.launchQuery(selectedBusiness.location.address);
                     },
                   ),
@@ -385,6 +406,8 @@ class _MapViewState extends State<MapView> {
     );
   }
 
+  // Build the community card found on the bottom of the business information
+  // SlidingUpPanel
   Widget buildCommunityCard() {
     return Padding(
       padding: EdgeInsets.only(
@@ -412,8 +435,11 @@ class _MapViewState extends State<MapView> {
     );
   }
 
+  // Build and control the logic for which follow button to display
   Widget buildFollowButton() {
     if ( Globals.currentUser.followedBusinesses.contains(selectedBusiness.id) ) {
+      // Business is currently followed, so the unfollow button needs to be
+      // displayed
       return LargeRoundedButton(
         horizontalMargin: 10,
         backgroundColor: Theme.of(context).primaryColor,
@@ -441,6 +467,8 @@ class _MapViewState extends State<MapView> {
             : unfollowBusiness,
       );
     } else {
+      // Business is currently not followed, so the follow button needs to be
+      // displayed
       return LargeRoundedButton(
         horizontalMargin: 10,
         backgroundColor: Theme.of(context).primaryColor,
@@ -470,11 +498,13 @@ class _MapViewState extends State<MapView> {
     }
   }
 
+  // Call the Backend function to unfollow the selected business
   void unfollowBusiness() {
     setState(() {
       isLoadingFollowStatus = true;
     });
     Backend.unfollowBusiness(selectedBusiness.id).then((value) {
+      // Update globals to reflect the business unfollow action
       setState(() {
         Globals.currentUser.followedBusinesses.remove(selectedBusiness.id);
         Globals.followedBusinessesEvents = [];
@@ -483,43 +513,45 @@ class _MapViewState extends State<MapView> {
       scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text('Unfollowed business'),
-        )
+        ),
       );
     }).catchError((error) {
       setState(() {
         isLoadingFollowStatus = false;
       });
       scaffoldKey.currentState.showSnackBar(
-          SnackBar(
-            content: Text('Failed to unfollow business'),
-          )
+        SnackBar(
+          content: Text('Failed to unfollow business'),
+        ),
       );
     });
   }
 
+  // Call the Backend to follow the business
   void followBusiness() {
     setState(() {
       isLoadingFollowStatus = true;
     });
     Backend.followBusiness(selectedBusiness.id).then((value) {
       setState(() {
+        // Update locally stored globals to reflect the newly followed business
         Globals.currentUser.followedBusinesses.add(selectedBusiness.id);
         Globals.followedBusinessesEvents = [];
         isLoadingFollowStatus = false;
       });
       scaffoldKey.currentState.showSnackBar(
-          SnackBar(
-            content: Text('Followed business'),
-          )
+        SnackBar(
+          content: Text('Followed business'),
+        ),
       );
     }).catchError((error) {
       setState(() {
         isLoadingFollowStatus = false;
       });
       scaffoldKey.currentState.showSnackBar(
-          SnackBar(
-            content: Text('Failed to follow business'),
-          )
+        SnackBar(
+          content: Text('Failed to follow business'),
+        ),
       );
     });
   }

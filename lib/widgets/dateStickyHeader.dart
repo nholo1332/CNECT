@@ -1,14 +1,16 @@
-import 'package:cnect/models/event.dart';
-import 'package:cnect/providers/globals.dart';
-import 'package:cnect/utils.dart';
-import 'package:cnect/widgets/eventListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:intl/intl.dart';
 
+import 'package:cnect/models/event.dart';
+import 'package:cnect/providers/globals.dart';
+import 'package:cnect/utils.dart';
+import 'package:cnect/widgets/eventListItem.dart';
+
 class DateStickyHeader {
 
   List<Widget> buildSideHeaderGrids(BuildContext context, int firstIndex, int count, List<Event> events, { bool showCheckMark = false }) {
+    // Build regular event list that shows the check mark if needed
     return List.generate(1, (sliverIndex) {
       sliverIndex += firstIndex;
       return SliverStickyHeader(
@@ -38,6 +40,7 @@ class DateStickyHeader {
   }
 
   Widget buildSideHeader(BuildContext context, int index, List<Event> events) {
+    // Build the date side sticky header
     var date = events[index].startTime;
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -74,6 +77,8 @@ class DateStickyHeader {
   }
 
   Widget buildDateText(BuildContext context, DateTime date) {
+    // Determine whether or not an event is today, and if so, highlight the
+    // background of the date text
     if ( Utils.isSameDate(new DateTime.now(), date) ) {
       return Container(
         width: 75,

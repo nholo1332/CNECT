@@ -1,19 +1,19 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:social_share/social_share.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 import 'package:cnect/models/community.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/widgets/bottomSheetPopOver.dart';
 import 'package:cnect/widgets/listItemWithAction.dart';
-import 'package:flutter/material.dart';
 import 'package:cnect/models/event.dart';
-import 'package:flutter/services.dart';
-import 'package:social_share/social_share.dart';
-
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:path_provider/path_provider.dart';
 
 class SocialSheet {
 
+  // Create the bottom sheet
   showSocialBottomSheet(BuildContext context, Event event) {
     showModalBottomSheet<int>(
       backgroundColor: Colors.transparent,
@@ -64,6 +64,7 @@ class SocialSheet {
     );
   }
 
+  // Share to Twitter with event name and community name in hashtag
   shareToTwitter(Event event) {
     int communityIndex = Globals.currentUser.communities.indexWhere((c) => c.id == event.community);
     List<String> hashtags = ['CNECT'];

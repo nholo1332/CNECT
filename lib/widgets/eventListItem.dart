@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+
 import 'package:cnect/models/event.dart';
 import 'package:cnect/utils.dart';
 import 'package:cnect/views/event/event.dart';
-import 'package:flutter/material.dart';
 
 class EventListItem extends StatelessWidget {
 
+  // Setup required paramters
   EventListItem(this.event, {this.showDate = true, this.showCheckMark = false});
   final Event event;
   final bool showDate;
@@ -12,6 +14,7 @@ class EventListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Build list item content
     return Material(
       color: Colors.transparent,
       child: InkWell(

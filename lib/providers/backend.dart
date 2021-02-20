@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http_retry/http_retry.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:cnect/models/announcement.dart';
 import 'package:cnect/models/bugReport.dart';
@@ -6,9 +9,6 @@ import 'package:cnect/models/business.dart';
 import 'package:cnect/models/event.dart';
 import 'package:cnect/models/user.dart';
 import 'package:cnect/providers/globals.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http_retry/http_retry.dart';
-import 'package:http/http.dart' as http;
 
 class Backend {
 
@@ -21,6 +21,7 @@ class Backend {
     return auth.currentUser.getIdToken();
   }
 
+  // Send new user data to the server to create a database entry for the user
   static Future signUp(UserClass user) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),
@@ -39,6 +40,7 @@ class Backend {
     });
   }
 
+  // Get user data
   static Future getUser() async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),
@@ -51,6 +53,7 @@ class Backend {
       headers: headers,
     ).then((res) {
       if ( res.statusCode == 200 ) {
+        // Create a new UserClass model from response data body
         return new UserClass.fromJson(json.decode(res.body));
       } else {
         throw res.statusCode;
@@ -60,6 +63,7 @@ class Backend {
     });
   }
 
+  // Remove user RSVP from event
   static Future redactRSVP(String eventId) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),
@@ -77,6 +81,7 @@ class Backend {
     });
   }
 
+  // RSVP user to an event
   static Future addRSVP(String eventId) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),
@@ -94,7 +99,9 @@ class Backend {
     });
   }
 
+  // Get a list of Businesses
   static Future<List<Business>> getBusinesses(String communityId) async {
+    // Check to see if this request has been made and is stored in thr globals
     if ( ( Globals.businesses ?? {} ).containsKey(communityId) ) {
       return Globals.businesses[communityId];
     } else {
@@ -108,11 +115,14 @@ class Backend {
         baseURL + '/businesses/getAll/community/' + communityId,
         headers: headers,
       ).then((res) {
+        // Tell Flutter to read the response data as a JSON model
         Map<String, dynamic> data = json.decode(res.body);
+        // Map the JSON model array to a list of Business
         List<Business> business = data['businesses'] != []
             ? data['businesses'].map((item) => Business.fromJson(item)).toList().cast<Business>()
             : new List<Business>();
         if ( Globals.businesses == null ) {
+          // Save new data to globals
           Map<String, List<Business>> newBusinesses = {
             communityId: business,
           };
@@ -120,6 +130,7 @@ class Backend {
         } else {
           Globals.businesses[communityId] = business;
         }
+        // Return data as List<Business>
         return business;
       }).catchError((error) {
         throw error;
@@ -127,6 +138,7 @@ class Backend {
     }
   }
 
+  // Unfollows a Business
   static Future unfollowBusiness(String businessId) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),
@@ -144,6 +156,7 @@ class Backend {
     });
   }
 
+  // Follows a business
   static Future followBusiness(String businessId) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),
@@ -161,10 +174,14 @@ class Backend {
     });
   }
 
+  // Gets a list of community events for specific community
   static Future<List<Event>> getAllCommunityEvents(String communityId) async {
+    // Check the local array to see if it contains the community ID as a key
     if ( ( Globals.communityEvents ?? {} ).containsKey(communityId) ) {
+      // If so, return from globals
       return Globals.communityEvents[communityId];
     } else {
+      // If not, make a request to the server
       Map<String, String> headers = {
         'Authorization': 'Bearer ' + await generateToken(),
         'Content-Type': 'application/json',
@@ -179,6 +196,7 @@ class Backend {
         List<Event> events = data['events'] != []
             ? data['events'].map((item) => Event.fromJson(item)).toList().cast<Event>()
             : new List<Event>();
+        // Update or create globals for community, if needed
         if ( Globals.communityEvents == null ) {
           Map<String, List<Event>> newEvent = {
             communityId: events,
@@ -194,6 +212,7 @@ class Backend {
     }
   }
 
+  // Get a list of all businesses the user follows
   static Future<List<Business>> getAllFollowedBusinessesEvents() async {
     if ( Globals.followedBusinessesEvents.length > 0 ) {
       return Globals.followedBusinessesEvents;
@@ -220,6 +239,7 @@ class Backend {
     }
   }
 
+  // Get all community announcements for community
   static Future<List<Announcement>> getAllCommunityAnnouncements(String communityId) async {
     if ( ( Globals.communityAnnouncements ?? {} ).containsKey(communityId) ) {
       return Globals.communityAnnouncements[communityId];
@@ -253,6 +273,7 @@ class Backend {
     }
   }
 
+  // Get all announcements by businesses the user follows
   static Future<List<Business>> getAllFollowedBusinessesAnnouncements() async {
     if ( Globals.businessAnnouncements.length > 0 ) {
       return Globals.businessAnnouncements;
@@ -279,6 +300,7 @@ class Backend {
     }
   }
 
+  // Update the user's profile (name and description)
   static Future saveName(String name, String description) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),
@@ -300,6 +322,7 @@ class Backend {
     });
   }
 
+  // Send the bug report to the server
   static Future reportBug(BugReport report) async {
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + await generateToken(),

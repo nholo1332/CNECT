@@ -1,6 +1,7 @@
 import 'package:cnect/models/location.dart';
 
 class Event {
+  // Create model variables
   String id;
   String name;
   String description;
@@ -19,16 +20,20 @@ class Event {
     this.community,
   });
 
+// Convert JSON to data model variables
   Event.fromJson(Map<String, dynamic> data) {
     id = data['id'];
     name = data['name'];
     description = data['description'];
+    // Convert JSON string date into DateTime
     startTime = DateTime.parse(data['start_time']);
     endTime = DateTime.parse(data['end_time']);
+    // Convert JSON into variable with the LocationData
     location = new LocationData.fromJson(data['location']);
     community = data['community'];
   }
 
+  // Convert data model variables to JSON
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,

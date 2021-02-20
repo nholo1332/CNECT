@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class LargeRoundedButton extends StatelessWidget {
 
+  // Setup required widget parameters
   LargeRoundedButton({
     this.horizontalMargin = 50,
     @required this.backgroundColor,

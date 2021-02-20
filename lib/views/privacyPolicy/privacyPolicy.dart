@@ -14,6 +14,7 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
 
   @override
   Widget build(BuildContext context) {
+    // Build the main content of the view
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       key: scaffoldKey,
@@ -86,6 +87,8 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
                       bottom: 15,
                     ),
                     child: FutureBuilder(
+                      // Use a Future builder to load the privacy policy from
+                      // file into the view
                       future: Future.delayed(Duration(milliseconds: 150)).then((value) {
                         return rootBundle.loadString('assets/policies/privacy.md');
                       }),

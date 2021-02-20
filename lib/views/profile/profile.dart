@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:cnect/main.dart';
 import 'package:cnect/models/community.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/views/privacyPolicy/privacyPolicy.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class ProfileView extends StatefulWidget {
   ProfileView();
@@ -31,12 +32,15 @@ class _ProfileViewState extends State<ProfileView> {
     super.initState();
     newName = Globals.currentUser.name;
     newDescription = Globals.currentUser.description;
+    // Create text field controllers to allow for filling the current name and
+    // user description
     nameTextController = new TextEditingController(text: newName);
     descriptionTextController = new TextEditingController(text: newDescription);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Structure main content
     return Scaffold(
       key: scaffoldKey,
       body: Container(
@@ -248,13 +252,16 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  // Handle logout
   logout() {
     auth.signOut().then((value) {
+      // Reset all global variables to their default (nulled) values
       Globals.businesses = {};
       Globals.communityEvents = {};
       Globals.followedBusinessesEvents = [];
       Globals.communityAnnouncements = {};
       Globals.selectedCommunity = null;
+      // Remove all hierarchy of views and push to the login view
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -271,6 +278,7 @@ class _ProfileViewState extends State<ProfileView> {
     });
   }
 
+  // Build list item seen the list of user's communities
   buildCommunityListItem(Community community) {
     return ListTile(
       leading: Icon(Icons.location_city),
@@ -279,6 +287,7 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  // Build the community card that shows the user's communities
   Widget buildCommunitiesCard(BuildContext context) {
     List<Widget> widgets = [
       ListTile(
@@ -308,6 +317,7 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  // Save user's profile name and description/bio
   void saveName() {
     setState(() {
       isSaving = true;
@@ -316,6 +326,7 @@ class _ProfileViewState extends State<ProfileView> {
       setState(() {
         isSaving = false;
       });
+      // Update globals to reflect change
       Globals.currentUser.name = newName;
       Globals.currentUser.description = newDescription;
       scaffoldKey.currentState.showSnackBar(

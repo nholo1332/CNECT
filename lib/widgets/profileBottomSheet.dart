@@ -1,14 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/views/bugReport/bugReport.dart';
 import 'package:cnect/views/profile/profile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class ProfileBottomSheet {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
   showProfileBottomSheet(BuildContext context) {
+    // Build the profile sheet that appears after clicking the profile button
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -52,6 +54,7 @@ class ProfileBottomSheet {
                       title: Text(Globals.currentUser.name),
                       subtitle: Text(auth.currentUser.email),
                       onTap: () {
+                        // Move to the profile view
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -73,6 +76,7 @@ class ProfileBottomSheet {
                       leading: Icon(Icons.settings),
                       title: Text('Profile'),
                       onTap: () {
+                        // Move to the profile view
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -89,6 +93,8 @@ class ProfileBottomSheet {
                       leading: Icon(Icons.bug_report),
                       title: Text('Report a Bug'),
                       onTap: () {
+                        // Push the view to the BugReport view to allow the user
+                        // to report a found bug
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -105,6 +111,7 @@ class ProfileBottomSheet {
                       leading: Icon(Icons.gavel),
                       title: Text('Licenses'),
                       onTap: () {
+                        // Open the license page
                         showLicensePage(
                           context: context,
                           applicationName: 'CNECT',

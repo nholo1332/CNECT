@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:cnect/main.dart';
 import 'package:cnect/models/user.dart';
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/views/privacyPolicy/privacyPolicy.dart';
 import 'package:cnect/widgets/largeRoundedButton.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class SignUpView extends StatefulWidget {
   SignUpView();
@@ -26,6 +27,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
+    // Create main body
     return Scaffold(
       key: scaffoldKey,
       body: Container(
@@ -74,6 +76,7 @@ class _SignUpViewState extends State<SignUpView> {
                     width: 170,
                     child: FlatButton(
                       onPressed: () {
+                        // Pop back to the login view
                         Navigator.of(context).pop();
                       },
                       child: Row(
@@ -208,6 +211,7 @@ class _SignUpViewState extends State<SignUpView> {
                           MaterialButton(
                             child: Text('Privacy Policy'),
                             onPressed: () {
+                              // Move to the privacy policy view
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -229,16 +233,22 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
+  // Create an account for the new user
   void signUp(BuildContext context) {
+    // Ensure no snack bars are currently being shown to avoid stacking them
     scaffoldKey.currentState.removeCurrentSnackBar();
     setState(() {
       isLoading = true;
     });
+    // Create user account
     auth.createUserWithEmailAndPassword(email: email, password: password).then((value) {
       var user = new UserClass();
       user.name = name;
+      // Send new user data to the server to add to the database
       return Backend.signUp(user);
     }).then((value) {
+      // Move to the splash screen to load all user data and eventually bring
+      // user to the main views of the app
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) => SplashScreen(),

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:cnect/models/business.dart';
 import 'package:cnect/models/community.dart';
 import 'package:cnect/models/event.dart';
@@ -7,7 +9,6 @@ import 'package:cnect/utils.dart';
 import 'package:cnect/widgets/businessEventStickyHeader.dart';
 import 'package:cnect/widgets/dateStickyHeader.dart';
 import 'package:cnect/widgets/profileBottomSheet.dart';
-import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
   HomeView();
@@ -37,22 +38,24 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
+    // Initialize the tab bar controller and set current (first) tab
     controller = TabController(
       length: tabs.length,
       vsync: this,
     );
-
     controller.addListener(() {
       setState(() {
         selectedIndex = controller.index;
       });
     });
 
+    // Check if global selected community exists, and if not, set its value
     if ( Globals.selectedCommunity == null ) {
       Globals.selectedCommunity = Globals.currentUser.communities.first;
     }
   }
 
+  // Main view body
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,6 +215,7 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     );
   }
 
+  // Build the My Events tab content
   buildMyEventsContent(BuildContext context) {
     if ( Globals.currentUser.events.length > 0 ) {
       return Padding(
@@ -243,11 +247,16 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     }
   }
 
+  // Build the event list with current day side sticky header
   buildEventList(BuildContext context, List<Event> events, bool showCheckMark) {
     List<Widget> slivers = List<Widget>();
     int firstIndex = 0;
 
+    // Loop through events
     for ( int i = 0; i < events.length; i++ ) {
+      // If the previous loop returned an event that has a different date than
+      // this loop's event, split at the last range and create sticky header and
+      // list items for that group
       if ( i > 0 && ( !Utils.isSameDate(events[i - 1].startTime, events[i].startTime) || i + 1 == events.length ) ) {
         int count = events.getRange(firstIndex, i).length;
         slivers.addAll(
@@ -262,6 +271,8 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
         firstIndex = i;
       }
 
+      // If there is only one event or it is on the last events, add that group
+      // between loops
       if ( ( i + 1 ) == events.length ) {
         slivers.addAll(
           DateStickyHeader().buildSideHeaderGrids(
@@ -289,8 +300,10 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     return scrollView;
   }
 
+  // Build all community events list
   Widget buildCommunityEvents(BuildContext context) {
     if ( Globals.currentUser.communities.length != 0 ) {
+      // Use a Future to load data and show the loading indicator while waiting
       return FutureBuilder<List<Event>>(
         future: Backend.getAllCommunityEvents(Globals.selectedCommunity.id),
         builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
@@ -339,6 +352,7 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     }
   }
 
+  // Show the business events with the sticky header that has the business name
   Widget buildBusinessEvents(BuildContext context) {
     if ( Globals.currentUser.followedBusinesses.length != 0 ) {
       return FutureBuilder<List<Business>>(
@@ -412,6 +426,8 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     }
   }
 
+  // Build the list seen on the business tab. Create a sticky header for each
+  // business and list the events underneath
   buildBusinessEventList(BuildContext context, List<Business> businesses) {
     List<Widget> slivers = List<Widget>();
 
@@ -432,11 +448,17 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     return scrollView;
   }
 
+  // Calculate the scroll offset and to what scroll position the app should
+  // default. This provides the user with an easy way to see today's events.
+  // However, there may not always be enough events to scroll, so the safety is
+  // not scrolling (or setting the position to 0;
   double findScrollOffset(int count, List<Event> events) {
     double itemHeight = 72;
+    // Loop through events
     for ( int j = 0; j < count; j++ ) {
       DateTime eventDate = events[j].startTime;
       DateTime now = DateTime.now();
+      // Compare dates to determine scroll position
       if ( eventDate.year == now.year && eventDate.month == now.month ) {
         if ( Utils.isSameDate(eventDate, now) ) {
           return j * itemHeight;

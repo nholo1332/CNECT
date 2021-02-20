@@ -1,15 +1,18 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:package_info/package_info.dart';
+
 import 'package:cnect/providers/backend.dart';
 import 'package:cnect/providers/globals.dart';
 import 'package:cnect/views/login/login.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cnect/themes/dark.dart';
 import 'package:cnect/themes/light.dart';
 import 'package:cnect/manager.dart';
-import 'package:package_info/package_info.dart';
 
 void main() async {
+  // Ensure app if fully loaded before initializing Firebase and starting the
+  // full app framework
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(CNECT());
@@ -18,6 +21,7 @@ void main() async {
 class CNECT extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Create Material App that contains the main control system for the app
     return MaterialApp(
       title: 'CNECT',
       debugShowCheckedModeBanner: false,
@@ -43,18 +47,23 @@ class _SplashScreenState extends State<SplashScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   void fetchData() async {
+    // Fetch app information
     Globals.packageInfo = await PackageInfo.fromPlatform();
+    // Check if user is authenticated
     if ( auth.currentUser != null ) {
+      // Get user data from server
       Backend.getUser().then((value) {
+        // Update global currentUser and push to the manager view for the app
+        // experience
         Globals.currentUser = value;
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Manager()));
       }).catchError((error) {
-        print(error);
         if ( error == 404 ) {
           // TODO: Move to the on boarding view and add user name input page
         }
       });
     } else {
+      // Move to the login view, as no user is currently authenticated
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginView()));
     }
   }

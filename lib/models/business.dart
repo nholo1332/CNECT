@@ -3,6 +3,7 @@ import 'package:cnect/models/event.dart';
 import 'package:cnect/models/location.dart';
 
 class Business {
+  // Create model variables
   String id;
   String name;
   String description;
@@ -19,11 +20,13 @@ class Business {
     this.announcements,
   });
 
+  // Convert JSON to data model variables
   Business.fromJson(Map<String, dynamic> data) {
     id = data['id'];
     name = data['name'];
     description = data['description'];
     location = new LocationData.fromJson(data['location']);
+    // Map a JSON array to list of objects
     events = data['events'] != []
         ? data['events'].map((item) => Event.fromJson(item)).toList().cast<Event>()
         : new List<Event>();
@@ -32,6 +35,7 @@ class Business {
         : new List<Announcement>();
   }
 
+  // Convert data model variables to JSON
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,

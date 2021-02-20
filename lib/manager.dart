@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:cnect/views/announcements/announcements.dart';
 import 'package:cnect/views/home/home.dart';
 import 'package:cnect/views/map/map.dart';
-import 'package:flutter/material.dart';
 
 class Manager extends StatefulWidget {
 
@@ -15,6 +16,7 @@ class Manager extends StatefulWidget {
 
 class _ManagerState extends State<Manager> {
 
+  // Create tabs for navigation tab bar
   int _currentIndex = 0;
   final List<Widget> _children = [
     HomeView(),
@@ -25,29 +27,16 @@ class _ManagerState extends State<Manager> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
+    // Create the scaffold to hold the bottom navigation bar
     return Scaffold(
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        //backgroundColor: Theme.of(context).bottomAppBarColor,
         onTap: onTabTapped,
         currentIndex: _currentIndex,
-        /*selectedIconTheme: IconThemeData(
-            color: Theme.of(context).accentColor
-        ),
-        selectedLabelStyle: TextStyle(
-            color: Theme.of(context).accentColor
-        ),
-        selectedItemColor: Theme.of(context).accentColor,
-        unselectedIconTheme: Theme.of(context).accentIconTheme,
-        unselectedLabelStyle: TextStyle(
-            color: Theme.of(context).accentIconTheme.color
-        ),
-        unselectedItemColor: Theme.of(context).accentIconTheme.color,*/
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -66,6 +55,7 @@ class _ManagerState extends State<Manager> {
     );
   }
 
+  // Switch the current tab to the selected index
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;

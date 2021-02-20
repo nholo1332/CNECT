@@ -1,4 +1,5 @@
 class Announcement {
+  // Create model variables
   String id;
   String title;
   String description;
@@ -13,6 +14,7 @@ class Announcement {
     this.publishDate,
   });
 
+  // Convert JSON to data model variables
   Announcement.fromJson(Map<String, dynamic> data) {
     id = data['id'];
     title = data['title'];
@@ -21,6 +23,7 @@ class Announcement {
     publishDate = DateTime.parse(data['publish_date']);
   }
 
+  // Convert data model variables to JSON
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,

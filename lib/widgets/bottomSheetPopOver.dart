@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BottomSheetPopOver extends StatelessWidget {
+  // Setup required parameters
   const BottomSheetPopOver({
     Key key,
     @required this.child,
@@ -12,6 +13,7 @@ class BottomSheetPopOver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Create widget content
     return Container(
       margin: EdgeInsets.only(
         bottom: 25,
@@ -48,6 +50,7 @@ class BottomSheetPopOver extends StatelessWidget {
   }
 
   Widget buildHandle(BuildContext context) {
+    // Build the handle at the top of the popover
     return FractionallySizedBox(
       widthFactor: 0.25,
       child: Container(

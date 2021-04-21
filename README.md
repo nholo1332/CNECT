@@ -99,3 +99,5 @@ There are many platforms that allow cross-platform (non-native) development, so 
 ## Credits
 
 All dependencies can be found in the `pubspec.yaml` file. All licenses can be found on the licenses view in the app.
+
+The application, logos, and ideas were created by the FBLA Mobile App Development team from Clarkson Public Schools - Mitchel Beeson, Noah Holoubek, and Emily Loseke.

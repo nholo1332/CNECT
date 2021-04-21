@@ -28,6 +28,9 @@ Our app logo was formed as a way to depict the connection created between the lo
 We created CNECT as a way to make it easier for local professionals to connect with businesses in their community. Our app is all about connections, which led us to the name of CNECT (pronounced "connect"). There are many social media applications available that aim to help professionals, but our app targets a new way of doing so - involving the community. The community around you is what builds support for not only yourself and your business, but creates unity within the community and leads to success.
 
 
+Our app was submitted to the 2020-2021 Nebraska FBLA State Leadership Conference (SLC) and was awarded 1st place. Due to the nature of the 2021 National Leadership Conference (NLC), we, as a team, decided to submit our inidividual projects for NLC instead of this project. Sadly, this brings the end to the development of this app project, but we had fun developing, testing, and submitting our project.
+
+
 ## Key Features
 
 * Community Events
